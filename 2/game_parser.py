@@ -1,6 +1,7 @@
 from functools import reduce
 
 def parse_game(game):
+    if (not game.startswith("Game")): return {}
     [gameNum, rounds] = game.split(":")
     parsed_rounds = map(lambda round: parse_round(round), rounds.split(";"))
     parsed_rounds = reduce(lambda r1, r2: merge_rounds(r1, r2), parsed_rounds)

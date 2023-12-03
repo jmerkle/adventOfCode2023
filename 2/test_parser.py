@@ -36,3 +36,8 @@ def test_parse_game():
     assert parsed["blue"] == 6
     assert parsed["red"] == 4
     assert parsed["green"] == 2
+
+def test_fail_on_invalid_line():
+    game = ""
+    parsed = parse_game(game)
+    assert parsed == {}
