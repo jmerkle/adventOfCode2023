@@ -1,5 +1,5 @@
 from game_parser import parse_game
-from validate_cubes import cubes_are_valid
+from process_cubes import *
 
 f = open('input.txt', 'r')
 data = f.read()
@@ -13,6 +13,7 @@ all_cubes = {
 }
 
 sum_of_ids = 0
+sum_of_power = 0
 
 for line in lines:
     if line.startswith("Game"):
@@ -24,6 +25,11 @@ for line in lines:
         print(valid)
         if valid:
             sum_of_ids += game_id
+        power = power_of_cubes(parsed)
+        print(power)
+        sum_of_power += power
 
 print("sum of valid ids:")
 print(sum_of_ids)
+print("sum of power:")
+print(sum_of_power)

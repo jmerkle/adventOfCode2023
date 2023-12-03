@@ -1,4 +1,4 @@
-from validate_cubes import *
+from process_cubes import *
 
 
 def test_validate_valid():
@@ -29,3 +29,12 @@ def test_validate_invalid():
     }
 
     assert not cubes_are_valid(available_cubes, shown_cubes)
+
+def test_power_of_cubes():
+    max_shown_cubes = {
+        "blue": 6,
+        "green": 2,
+        "red": 4
+    }
+    power = power_of_cubes(max_shown_cubes)
+    assert power == 6*2*4
