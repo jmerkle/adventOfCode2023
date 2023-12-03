@@ -32,10 +32,11 @@ def test_merge_rounds():
 
 def test_parse_game():
     game = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
-    parsed = parse_game(game)
+    game_num, parsed = parse_game(game)
     assert parsed["blue"] == 6
     assert parsed["red"] == 4
     assert parsed["green"] == 2
+    assert game_num == 1
 
 def test_fail_on_invalid_line():
     game = ""
