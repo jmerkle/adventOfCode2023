@@ -1,8 +1,5 @@
 import numpy as np
-
-arr = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
-
-print(arr)
+from functions import *
 
 data = """467..114..
 ...*......
@@ -14,7 +11,17 @@ data = """467..114..
 ......755.
 ...$.*....
 .664.598.."""
+
 matrix = data.split("\n")
 
-print(matrix)
-print(matrix[0][2])
+parts = []
+
+for line in range(len(matrix)):
+    numbers_with_indexes = find_numbers_with_position_indexes(matrix[line])
+    for number_with_index in numbers_with_indexes:
+        surrounding_symbols = [find_surrounding_symbol_for_entry(matrix, line, column) for column in range(number_with_index[1], number_with_index[2])]
+        if True in surrounding_symbols: parts.append(number_with_index[0])
+
+print(parts)
+print(sum(parts))
+

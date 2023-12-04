@@ -1,4 +1,5 @@
 import numpy as np
+import re
 
 
 def surrounding_symbols_of_numerical_values(data):
@@ -38,3 +39,7 @@ def find_surrounding_symbol_for_entry(matrix, line, column):
 
 def is_symbol(char):
     return not char.isnumeric() and not char == "."
+
+def find_numbers_with_position_indexes(line):
+    res = [[int(match.group()), match.start(), match.end()] for match in re.finditer(r'\d+', line)]
+    return res

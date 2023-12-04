@@ -32,3 +32,11 @@ def test_is_symbol():
     assert not is_symbol("1")
     assert not is_symbol("9")
 
+def test_find_position_of_number():
+    data = "467..114.."
+
+    result = find_numbers_with_position_indexes(data)
+
+    assert result[0] == [467, 0, 3]
+    assert result[1] == [114, 5, 8]
+    assert len(result) == 2
