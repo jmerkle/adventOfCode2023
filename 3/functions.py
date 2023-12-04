@@ -46,6 +46,14 @@ def find_numbers_with_position_indexes(line):
     return res
 
 
+def findings_as_dictionary(number, findings):
+    return dict.fromkeys(findings, [number])
+
+
+def merge_dictionaries(dict1, dict2):
+    return {key: dict1.get(key, []) + dict2.get(key, []) for key in set(dict1.keys()) | set(dict2.keys())}
+
+
 def find_adjacent_gear_for_found_number(matrix, line, found_number):
     return flatten_list_and_remove_duplicates(
         [find_adjacent_gear_for_position(matrix, line, column) for column in range(found_number[1], found_number[2])])

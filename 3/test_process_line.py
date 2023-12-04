@@ -77,3 +77,32 @@ def test_find_multiple_adjacent_gears_for_position():
 
     result = find_adjacent_gear_for_position(matrix, 0, 2)
     assert result == ["0-3", "1-3"]
+
+
+def test_create_dictionary_for_found_gears():
+    dict1 = findings_as_dictionary(467, ["1-3"])
+    dict2 = findings_as_dictionary(35, ["1-3", "2-4"])
+
+    assert dict1 == {
+        "1-3": [467]
+    }
+    assert dict2 == {
+        "1-3": [35],
+        "2-4": [35]
+    }
+
+def test_merge_dictionaries():
+    dict1 = {
+        "1-3": [467]
+    }
+    dict2 = {
+        "1-3": [35],
+        "2-4": [35]
+    }
+
+    merged = merge_dictionaries(dict1, dict2)
+
+    assert merged == {
+        "1-3": [467, 35],
+        "2-4": [35]
+    }
