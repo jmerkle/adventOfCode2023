@@ -43,3 +43,35 @@ def is_symbol(char):
 def find_numbers_with_position_indexes(line):
     res = [[int(match.group()), match.start(), match.end()] for match in re.finditer(r'\d+', line)]
     return res
+
+# def find_adjacent_gear_for_found_number(data, line, found_number):
+
+def find_adjacent_gear_for_position(matrix, line, column):
+    findings = []
+
+    max_line = len(matrix) - 1
+    max_column = len(matrix[0]) - 1
+    # above left
+    if line > 0 and column > 0 and is_gear(matrix[line - 1][column - 1]): findings.append(to_coord_string(line - 1, column - 1))
+    # above
+    if line > 0 and is_gear(matrix[line - 1][column]): findings.append(to_coord_string(line - 1, column))
+    # above right
+    if line > 0 and column < max_column and is_gear(matrix[line - 1][column + 1]): findings.append(to_coord_string(line - 1, column + 1))
+    # left
+    if column > 0 and is_gear(matrix[line][column - 1]): findings.append(to_coord_string(line, column - 1))
+    # right
+    if column < max_column and is_gear(matrix[line][column + 1]): findings.append(to_coord_string(line, column + 1))
+    # below_left
+    if line < max_line and column > 0 and is_gear(matrix[line + 1][column - 1]): findings.append(to_coord_string(line + 1, column - 1))
+    # below
+    if line < max_line and is_gear(matrix[line + 1][column]): findings.append(to_coord_string(line + 1, column))
+    # below right
+    if line < max_line and column < max_column and is_gear(matrix[line + 1][column + 1]): findings.append(to_coord_string(line + 1, column + 1))
+
+    return findings
+
+def is_gear(char):
+    return char == "*"
+
+def to_coord_string(line, column):
+    return str(line) + "-" + str(column)
