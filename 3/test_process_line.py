@@ -106,3 +106,37 @@ def test_merge_dictionaries():
         "1-3": [467, 35],
         "2-4": [35]
     }
+
+def test_merge_with_empty_dictionary():
+    dict1 = {
+        "1-3": [467]
+    }
+
+    merged1 = merge_dictionaries(dict1, {})
+    merged2 = merge_dictionaries({}, dict1)
+
+    assert merged1 == dict1
+    assert merged2 == dict1
+
+def test_calculate_ratios():
+    dict = {
+        "1-3": [467, 35],
+        "2-4": [755, 598]
+    }
+    assert calculate_rations(dict) == 467835
+
+def test_exercise_2():
+    matrix = """467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..""".split("\n")
+
+    result = process_exercise_2(matrix)
+
+    assert result == 467835

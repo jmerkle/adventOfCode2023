@@ -29,3 +29,6 @@ for line in range(len(matrix)):
 print(parts)
 print(sum(parts))
 
+print("part 2")
+print(process_exercise_2(matrix))
+

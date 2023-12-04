@@ -53,6 +53,12 @@ def findings_as_dictionary(number, findings):
 def merge_dictionaries(dict1, dict2):
     return {key: dict1.get(key, []) + dict2.get(key, []) for key in set(dict1.keys()) | set(dict2.keys())}
 
+def calculate_rations(dict):
+    filtered = filter(lambda numbers: len(numbers) == 2,dict.values())
+    products = map(lambda numbers: numbers[0] * numbers[1], filtered)
+    return sum(products)
+
+
 
 def find_adjacent_gear_for_found_number(matrix, line, found_number):
     return flatten_list_and_remove_duplicates(
@@ -98,3 +104,16 @@ def to_coord_string(line, column):
 
 def flatten_list_and_remove_duplicates(list_of_lists):
     return list(dict.fromkeys([item for sub_list in list_of_lists for item in sub_list]))
+
+def process_exercise_2(matrix):
+    result = {}
+
+    for line in range(len(matrix)):
+        numbers_with_indexes = find_numbers_with_position_indexes(matrix[line])
+        for number_with_index in numbers_with_indexes:
+            number = number_with_index[0]
+            gears = find_adjacent_gear_for_found_number(matrix, line, number_with_index)
+            dictionary = findings_as_dictionary(number, gears)
+            result = merge_dictionaries(result, dictionary)
+
+    return calculate_rations(result)
