@@ -12,7 +12,11 @@ data = """467..114..
 ...$.*....
 .664.598.."""
 
-matrix = data.split("\n")
+f = open('input.txt', 'r')
+data = f.read()
+f.close()
+
+matrix = [x for x in data.split("\n") if len(x) > 0]
 
 parts = []
 
