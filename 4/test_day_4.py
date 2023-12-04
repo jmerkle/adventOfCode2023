@@ -41,3 +41,8 @@ def test_calculate_wins_for_all_card():
 
 def test_exercise_2():
     assert exercise_2(data_small) == 30
+
+
+def test_exercise_2_full_data():
+    data = read_file_as_list_of_lines_and_filter_empty_lines('input.txt')
+    print(exercise_2(data))

@@ -1,4 +1,5 @@
 import re
+import queue
 
 
 def read_file_as_list_of_lines_and_filter_empty_lines(filename):
@@ -32,6 +33,16 @@ def extract_numbers(text):
 
 def exercise_2(data):
     wins_per_card = calculate_wins_for_all_cards(data)
+    card_count = 0
+    card_queue = queue.Queue()
+    [card_queue.put(c) for c in range(0, len(data))]
+    while card_queue.qsize() > 0:
+        card = card_queue.get()
+        card_count += 1
+        additional_cards = wins_per_card[card]
+        if additional_cards > 0:
+            [card_queue.put(c) for c in range(card+1, card+1+additional_cards)]
+    return card_count
 
 
 def calculate_wins_for_all_cards(data):
