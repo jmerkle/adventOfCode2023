@@ -43,6 +43,10 @@ def test_chain_mappings():
     assert value_from_chained_mappings([mapping1, mapping2, mapping3], 14) == 49
 
 
+def test_chunk_list():
+    li = [1, 2, 3, 4, 5, 6]
+    assert chunk_list(li, 3) == [[1, 2, 3], [4, 5, 6]]
+
 def test_exercise_1():
     assert exercise_1(data_small) == 35
 

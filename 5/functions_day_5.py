@@ -1,7 +1,9 @@
 import re
 import sys
 import time
-from multiprocessing import Pool
+import multiprocessing as mp
+from functools import partial
+
 
 
 def read_file_as_list_of_sections(filename):
@@ -68,8 +70,10 @@ def exercise_2_improved(data):
 
 def process_seed_batch(mappings, seeds):
     min_location = sys.maxsize
+    print("batch started")
     for seed in seeds:
         min_location = min(min_location, value_from_chained_mappings(mappings, seed))
+    print("batch done")
     return min_location
 
 
@@ -78,8 +82,7 @@ def chunk_list_into_pairs(li):
 
 
 def chunk_list(li, chunk_size):
-    for i in range(0, len(li), chunk_size):
-        yield li[i:i + chunk_size]
+    return [li[i: i + chunk_size] for i in range(0, len(li), chunk_size)]
 
 
 def expand_seed_range(seed_range):
@@ -94,18 +97,21 @@ def exercise_2_parallel(data, chunk_size):
     start_time = time.time()
     min_location = sys.maxsize
     mappings = [parse_mapping(line) for line in data[1:]]
+    mapping_fun = partial(process_seed_batch, mappings)
     seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
+    pool = mp.Pool(mp.cpu_count())
+    print(pool)
     for seed_range in seed_ranges:
         print("processing seed range ", seed_range)
         seeds = expand_seed_range(seed_range)
         print(" with ", len(seeds), " values")
-        chunked_seeds = chunk_list(seeds, chunk_size)
-        with Pool() as pool:
-            tmp_result = [pool.apply(process_seed_batch, args=(mappings, chunk)) for chunk in chunked_seeds]
+        chunked_seeds = list(chunk_list(seeds, chunk_size))
+        tmp_result = pool.map(mapping_fun, chunked_seeds)
         min_location = min(min_location, min(tmp_result))
         interim_time = time.time()
         print("range finished after ", interim_time-start_time, " seconds")
     end_time = time.time()
+    pool.close()
     print("all finished after ", end_time-start_time, " seconds")
     print("min is ", min_location)
     return min_location
