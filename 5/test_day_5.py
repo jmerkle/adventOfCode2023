@@ -69,6 +69,3 @@ def test_exercise_2_parallel():
 
 def test_exercise_2_improved_all_data():
     print(exercise_2_improved(data_full))
-
-# def test_exercise_2_all_data():
-#     print(exercise_2(data_full))

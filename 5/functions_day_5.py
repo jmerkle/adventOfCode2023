@@ -1,5 +1,6 @@
 import re
 import sys
+import time
 from multiprocessing import Pool
 
 
@@ -90,6 +91,7 @@ def flatten_list_and_remove_duplicates(list_of_lists):
 
 
 def exercise_2_parallel(data, chunk_size):
+    start_time = time.time()
     min_location = sys.maxsize
     mappings = [parse_mapping(line) for line in data[1:]]
     seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
@@ -100,5 +102,10 @@ def exercise_2_parallel(data, chunk_size):
         chunked_seeds = chunk_list(seeds, chunk_size)
         with Pool() as pool:
             tmp_result = [pool.apply(process_seed_batch, args=(mappings, chunk)) for chunk in chunked_seeds]
-            min_location = min(min_location, min(tmp_result))
-        return min_location
+        min_location = min(min_location, min(tmp_result))
+        interim_time = time.time()
+        print("range finished after ", interim_time-start_time, " seconds")
+    end_time = time.time()
+    print("all finished after ", end_time-start_time, " seconds")
+    print("min is ", min_location)
+    return min_location
