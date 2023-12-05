@@ -1,5 +1,6 @@
 import re
 import sys
+from multiprocessing import Pool
 
 
 def read_file_as_list_of_sections(filename):
@@ -64,20 +65,6 @@ def exercise_2_improved(data):
     return min_location
 
 
-def exercise_2_parallel(data, chunk_size):
-    min_location = sys.maxsize
-    mappings = [parse_mapping(line) for line in data[1:]]
-    seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
-    for seed_range in seed_ranges:
-        print("processing seed range ", seed_range)
-        seeds = expand_seed_range(seed_range)
-        print(" with ", len(seeds), " values")
-        chunked_seeds = chunk_list(seeds, chunk_size)
-        tmp_result = map(lambda chunk: process_seed_batch(mappings, chunk), chunked_seeds)
-        min_location = min(min_location, min(tmp_result))
-    return min_location
-
-
 def process_seed_batch(mappings, seeds):
     min_location = sys.maxsize
     for seed in seeds:
@@ -100,3 +87,18 @@ def expand_seed_range(seed_range):
 
 def flatten_list_and_remove_duplicates(list_of_lists):
     return list(dict.fromkeys([item for sub_list in list_of_lists for item in sub_list]))
+
+
+def exercise_2_parallel(data, chunk_size):
+    min_location = sys.maxsize
+    mappings = [parse_mapping(line) for line in data[1:]]
+    seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
+    for seed_range in seed_ranges:
+        print("processing seed range ", seed_range)
+        seeds = expand_seed_range(seed_range)
+        print(" with ", len(seeds), " values")
+        chunked_seeds = chunk_list(seeds, chunk_size)
+        with Pool() as pool:
+            tmp_result = [pool.apply(process_seed_batch, args=(mappings, chunk)) for chunk in chunked_seeds]
+            min_location = min(min_location, min(tmp_result))
+        return min_location
