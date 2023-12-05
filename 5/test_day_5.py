@@ -63,6 +63,10 @@ def test_exercise_2_improved():
     assert exercise_2_improved(data_small) == 46
 
 
+def test_exercise_2_parallel():
+    assert exercise_2_parallel(data_small, 2) == 46
+
+
 def test_exercise_2_improved_all_data():
     print(exercise_2_improved(data_full))
 

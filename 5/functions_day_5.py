@@ -64,6 +64,20 @@ def exercise_2_improved(data):
     return min_location
 
 
+def exercise_2_parallel(data, chunk_size):
+    min_location = sys.maxsize
+    mappings = [parse_mapping(line) for line in data[1:]]
+    seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
+    for seed_range in seed_ranges:
+        print("processing seed range ", seed_range)
+        seeds = expand_seed_range(seed_range)
+        print(" with ", len(seeds), " values")
+        chunked_seeds = chunk_list(seeds, chunk_size)
+        tmp_result = map(lambda chunk: process_seed_batch(mappings, chunk), chunked_seeds)
+        min_location = min(min_location, min(tmp_result))
+    return min_location
+
+
 def process_seed_batch(mappings, seeds):
     min_location = sys.maxsize
     for seed in seeds:
@@ -72,8 +86,12 @@ def process_seed_batch(mappings, seeds):
 
 
 def chunk_list_into_pairs(li):
-    for i in range(0, len(li), 2):
-        yield li[i:i + 2]
+    return chunk_list(li, 2)
+
+
+def chunk_list(li, chunk_size):
+    for i in range(0, len(li), chunk_size):
+        yield li[i:i + chunk_size]
 
 
 def expand_seed_range(seed_range):
