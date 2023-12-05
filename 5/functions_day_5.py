@@ -1,4 +1,5 @@
 import re
+import sys
 
 
 def read_file_as_list_of_sections(filename):
@@ -41,3 +42,32 @@ def exercise_1(data):
     mappings = [parse_mapping(line) for line in data[1:]]
     locations = [value_from_chained_mappings(mappings, seed) for seed in seeds]
     return min(locations)
+
+def exercise_2(data):
+    seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
+    seeds = flatten_list_and_remove_duplicates([expand_seed_range(seed_range) for seed_range in seed_ranges])
+    mappings = [parse_mapping(line) for line in data[1:]]
+    locations = [value_from_chained_mappings(mappings, seed) for seed in seeds]
+    return min(locations)
+
+def exercise_2_improved(data):
+    min_location = sys.maxsize
+    mappings = [parse_mapping(line) for line in data[1:]]
+    seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
+    for seed_range in seed_ranges:
+        print("processing seed range ", seed_range)
+        seeds = expand_seed_range(seed_range)
+        print(" with ", len(seeds), " values")
+        for seed in seeds:
+            min_location = min(min_location, value_from_chained_mappings(mappings, seed))
+    return min_location
+
+def chunk_list_into_pairs(li):
+    for i in range(0, len(li), 2):
+        yield li[i:i + 2]
+
+def expand_seed_range(seed_range):
+    return [v for v in range(seed_range[0], seed_range[0]+seed_range[1])]
+
+def flatten_list_and_remove_duplicates(list_of_lists):
+    return list(dict.fromkeys([item for sub_list in list_of_lists for item in sub_list]))
