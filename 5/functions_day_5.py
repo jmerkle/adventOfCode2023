@@ -1,7 +1,7 @@
 import re
 
 
-def read_file_as_list_of_lines_and_filter_empty_lines(filename):
+def read_file_as_list_of_sections(filename):
     f = open(filename, 'r')
     data = f.read()
     f.close()
@@ -37,4 +37,7 @@ def value_from_chained_mappings(mappings, value):
 
 
 def exercise_1(data):
-    return 0
+    seeds = extract_numbers(data[0].split(":")[1])
+    mappings = [parse_mapping(line) for line in data[1:]]
+    locations = [value_from_chained_mappings(mappings, seed) for seed in seeds]
+    return min(locations)

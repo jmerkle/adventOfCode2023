@@ -1,10 +1,11 @@
 from functions_day_5 import *
 
-data_small = read_file_as_list_of_lines_and_filter_empty_lines('input_small.txt')
+data_small = read_file_as_list_of_sections('input_small.txt')
+data_full = read_file_as_list_of_sections('input.txt')
 
 
 def test_read_file():
-    sections = read_file_as_list_of_lines_and_filter_empty_lines('input_small.txt')
+    sections = read_file_as_list_of_sections('input_small.txt')
     assert len(sections) == 8
     assert sections[0] == "seeds: 79 14 55 13"
     assert sections[1] == """seed-to-soil map:
@@ -44,3 +45,7 @@ def test_chain_mappings():
 
 def test_exercise_1():
     assert exercise_1(data_small) == 35
+
+
+def test_exercise_1_all_data():
+    print(exercise_1(data_full))
