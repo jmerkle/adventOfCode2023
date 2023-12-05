@@ -34,5 +34,13 @@ def test_find_value_in_mapping():
     assert find_value_in_mapping(mapping, 13) == 13
 
 
+def test_chain_mappings():
+    mapping1 = [[50, 98, 2], [52, 50, 48]]
+    mapping2 = [[0, 15, 37], [37, 52, 2], [39, 0, 15]]
+    mapping3 = [[49, 53, 8], [0, 11, 42], [42, 0, 7], [57, 7, 4]]
+
+    assert value_from_chained_mappings([mapping1, mapping2, mapping3], 14) == 49
+
+
 def test_exercise_1():
     assert exercise_1(data_small) == 35

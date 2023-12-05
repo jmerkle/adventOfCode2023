@@ -29,5 +29,12 @@ def find_value_in_mapping(mapping, value):
     return matching_row[0] + value - matching_row[1]
 
 
+def value_from_chained_mappings(mappings, value):
+    result = value
+    for mapping in mappings:
+        result = find_value_in_mapping(mapping, result)
+    return result
+
+
 def exercise_1(data):
     return 0
