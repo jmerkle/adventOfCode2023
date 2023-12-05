@@ -50,14 +50,18 @@ def test_exercise_1():
 def test_exercise_1_all_data():
     print(exercise_1(data_full))
 
+
 def test_expand_seed_range():
     assert expand_seed_range([79, 5]) == [79, 80, 81, 82, 83]
+
 
 def test_exercise_2():
     assert exercise_2(data_small) == 46
 
+
 def test_exercise_2_improved():
     assert exercise_2_improved(data_small) == 46
+
 
 def test_exercise_2_improved_all_data():
     print(exercise_2_improved(data_full))
