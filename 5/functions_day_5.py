@@ -70,10 +70,8 @@ def exercise_2_improved(data):
 
 def process_seed_batch(mappings, seeds):
     min_location = sys.maxsize
-    print("batch started")
     for seed in seeds:
         min_location = min(min_location, value_from_chained_mappings(mappings, seed))
-    print("batch done")
     return min_location
 
 
@@ -101,8 +99,10 @@ def exercise_2_parallel(data, chunk_size):
     seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
     pool = mp.Pool(mp.cpu_count())
     print(pool)
+    range_cnt = 0
     for seed_range in seed_ranges:
-        print("processing seed range ", seed_range)
+        range_cnt += 1
+        print("processing seed range ", range_cnt, "/", len(seed_ranges), ": ", seed_range)
         seeds = expand_seed_range(seed_range)
         print(" with ", len(seeds), " values")
         chunked_seeds = list(chunk_list(seeds, chunk_size))
