@@ -47,6 +47,7 @@ def test_chunk_list():
     li = [1, 2, 3, 4, 5, 6]
     assert chunk_list(li, 3) == [[1, 2, 3], [4, 5, 6]]
 
+
 def test_exercise_1():
     assert exercise_1(data_small) == 35
 
@@ -66,6 +67,13 @@ def test_exercise_2():
 def test_exercise_2_improved():
     assert exercise_2_improved(data_small) == 46
 
+
+def test_exercise_2_ranges():
+    assert exercise_2_ranges(data_small) == 46
+
+
+def test_exercise_2_ranges_full():
+    print(exercise_2_ranges(data_full))
 
 def test_exercise_2_parallel():
     assert exercise_2_parallel(data_small, 2) == 46

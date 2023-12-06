@@ -2,8 +2,9 @@ import re
 import sys
 import time
 import multiprocessing as mp
-from functools import partial
+import math
 
+from functools import partial
 
 
 def read_file_as_list_of_sections(filename):
@@ -91,6 +92,37 @@ def flatten_list_and_remove_duplicates(list_of_lists):
     return list(dict.fromkeys([item for sub_list in list_of_lists for item in sub_list]))
 
 
+def process_range(mappings, seed_range):
+    [range_start, range_size] = seed_range
+    location_start = value_from_chained_mappings(mappings, range_start)
+    if range_size < 2:
+        return location_start
+    location_end = value_from_chained_mappings(mappings, seed_range[0] + range_size - 1)
+    if location_end - location_start + 1 == range_size:
+        return location_start
+    split = math.floor(range_size / 2)
+    print("splitting on ", split)
+    return min(
+        process_range(mappings, [range_start, split]),
+        process_range(mappings, [range_start + split, math.ceil(range_size / 2)])
+    )
+
+def exercise_2_ranges(data):
+    start_time = time.time()
+    min_location = sys.maxsize
+    mappings = [parse_mapping(line) for line in data[1:]]
+    seed_ranges = chunk_list_into_pairs(extract_numbers(data[0].split(":")[1]))
+    range_cnt = 0
+    for seed_range in seed_ranges:
+        range_cnt += 1
+        print("processing seed range ", range_cnt, "/", len(seed_ranges), ": ", seed_range)
+        min_location = min(min_location, process_range(mappings, seed_range))
+    end_time = time.time()
+    print("all finished after ", end_time - start_time, " seconds")
+    print("min is ", min_location)
+    return min_location
+
+
 def exercise_2_parallel(data, chunk_size):
     start_time = time.time()
     min_location = sys.maxsize
@@ -109,9 +141,9 @@ def exercise_2_parallel(data, chunk_size):
         tmp_result = pool.map(mapping_fun, chunked_seeds)
         min_location = min(min_location, min(tmp_result))
         interim_time = time.time()
-        print("range finished after ", interim_time-start_time, " seconds")
+        print("range finished after ", interim_time - start_time, " seconds")
     end_time = time.time()
     pool.close()
-    print("all finished after ", end_time-start_time, " seconds")
+    print("all finished after ", end_time - start_time, " seconds")
     print("min is ", min_location)
     return min_location
