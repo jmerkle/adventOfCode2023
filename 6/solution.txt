@@ -1,0 +1,8 @@
+Part 2:
+find value range that solves the equation:
+https://www.wolframalpha.com/input?i=x*+71530-x%5E2%3E940200
+calculate how many values solve the equation:
+https://www.wolframalpha.com/input?i=floor%2826948849+%2B+20+sqrt%281032828625709%29%29+-+floor%2826948849+-+20+sqrt%281032828625709%29%29
+Part 1:
+see part 2, plug in all values from the input, then multiply all results
+40*60*31*69=5133600
