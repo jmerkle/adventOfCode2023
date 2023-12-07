@@ -107,6 +107,7 @@ def process_range(mappings, seed_range):
         process_range(mappings, [range_start + split, math.ceil(range_size / 2)])
     )
 
+
 def exercise_2_ranges(data):
     start_time = time.time()
     min_location = sys.maxsize
