@@ -50,11 +50,7 @@ def apply_bid(hand_idx: tuple[int, str]) -> int:
     return (index + 1) * int(bid)
 
 
-def apply_bids(hands_ranked: list[str]) -> list[int]:
-    return list(map(apply_bid, enumerate(hands_ranked)))
-
-
 def exercise_1(data: list[str]) -> int:
     hands_ranked = rank_hands(data)
-    winnings = apply_bids(hands_ranked)
+    winnings = list(map(apply_bid, enumerate(hands_ranked)))
     return sum(winnings)
