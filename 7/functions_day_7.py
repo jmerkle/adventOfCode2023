@@ -1,4 +1,5 @@
 from collections import Counter
+from typing import Callable
 
 
 def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
@@ -40,10 +41,6 @@ def enumerate_hand(hand: str) -> str:
     return str(hand_type(cards)) + with_sortable_chars(cards)
 
 
-def rank_hands(data: list[str]) -> list[str]:
-    return sorted(data, key=enumerate_hand)
-
-
 def apply_bid(hand_idx: tuple[int, str]) -> int:
     index, hand = hand_idx
     [_, bid] = hand.split()
@@ -51,6 +48,6 @@ def apply_bid(hand_idx: tuple[int, str]) -> int:
 
 
 def exercise_1(data: list[str]) -> int:
-    hands_ranked = rank_hands(data)
+    hands_ranked = sorted(data, key=enumerate_hand)
     winnings = list(map(apply_bid, enumerate(hands_ranked)))
     return sum(winnings)

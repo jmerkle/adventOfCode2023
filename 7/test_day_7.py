@@ -14,15 +14,8 @@ def test_hand_type():
     assert hand_type("AAAAA") == 6
 
 
-def test_enumerate_hand():
-    assert enumerate_hand("32T3K 765") < enumerate_hand("KTJJT 220")
-    assert enumerate_hand("KTJJT 220") < enumerate_hand("KK677 28")
-    assert enumerate_hand("KK677 28") < enumerate_hand("T55J5 684")
-    assert enumerate_hand("T55J5 684") < enumerate_hand("QQQJA 483")
-
-
 def test_rank_hands():
-    hands_ranked = rank_hands(data_small)
+    hands_ranked = sorted(data_small, key=enumerate_hand)
     assert hands_ranked[0] == "32T3K 765"
     assert hands_ranked[1] == "KTJJT 220"
     assert hands_ranked[2] == "KK677 28"
