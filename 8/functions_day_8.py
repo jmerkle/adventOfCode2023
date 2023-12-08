@@ -57,12 +57,35 @@ def find_repeating_destinations(maps: dict[str, tuple[str, str]], instructions: 
     return list(map(lambda d: (d, steps_taken-loop_start), destinations_in_loop))
 
 
+def generate_destinations(repeating_destination: tuple[int, int], max_position: int) -> list[int]:
+    init_position, loop_length = repeating_destination
+    destinations = []
+    i = 0
+    while len(destinations) < 1 or destinations[-1] < max_position:
+        destinations.append(init_position + loop_length*i)
+        i += 1
+    return destinations
+
+
+def flatten_list_and_remove_duplicates(list_of_lists):
+    return set(dict.fromkeys([item for sub_list in list_of_lists for item in sub_list]))
+
+
+def generate_destination_positions(repeating_destinations: list[tuple[int, int]], max_position: int):
+    positions = map(lambda repeating_destination: generate_destinations(repeating_destination, max_position), repeating_destinations)
+    return flatten_list_and_remove_duplicates(positions)
+
+
 def exercise_2(data: tuple[str, list[str]]) -> int:
     instructions, maps_raw = data
     maps: dict[str, tuple[str, str]] = maps_as_dictionary(maps_raw)
     locations: list[str] = list(filter(lambda position: position.endswith("A"), maps.keys()))
-    steps_taken = 0
-    while not reached_destination(locations):
-        locations = list(map(lambda location: move(maps, location, instructions[steps_taken % len(instructions)]), locations))
-        steps_taken += 1
-    return steps_taken
+    repeating_destinations_for_all_start_locations = list(map(lambda start_location: find_repeating_destinations(maps, instructions, start_location), locations))
+    max_position = 1024**2
+    intersected_positions = set([])
+    while len(intersected_positions) < 1:
+        max_position = max_position*2
+        print("trying with max position ", max_position)
+        generated_destinations = map(lambda repeating_destinations: generate_destination_positions(repeating_destinations, max_position), repeating_destinations_for_all_start_locations)
+        intersected_positions = set.intersection(*generated_destinations)
+    return list(intersected_positions)[0]
