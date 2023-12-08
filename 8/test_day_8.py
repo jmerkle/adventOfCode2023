@@ -1,4 +1,4 @@
-from functions_day_7 import *
+from functions_day_8 import *
 
 data_small_1 = read_file_as_instructions_and_maps('input_small_1.txt')
 data_small_2 = read_file_as_instructions_and_maps('input_small_2.txt')
