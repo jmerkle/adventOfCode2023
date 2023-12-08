@@ -12,9 +12,22 @@ def test_read_file():
     assert maps[-1] == "ZZZ = (ZZZ, ZZZ)"
 
 
+def test_map_to_triple():
+    assert map_to_triple("AAA = (BBB, CCC)") == ("AAA", "BBB", "CCC")
+
+
+def test_maps_as_dictionary():
+    assert maps_as_dictionary(data_small_2[1]) == {
+        "AAA": ("BBB", "BBB"),
+        "BBB": ("AAA", "ZZZ"),
+        "ZZZ": ("ZZZ", "ZZZ"),
+    }
+
+
 def test_exercise_1():
     assert exercise_1(data_small_1) == 2
     assert exercise_1(data_small_2) == 6
 
-# def test_exercise_1_all_data():
-#     print(exercise_1(data_full))
+
+def test_exercise_1_all_data():
+    assert exercise_1(data_full) == 19951
