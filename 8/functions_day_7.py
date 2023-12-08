@@ -29,3 +29,18 @@ def exercise_1(data: tuple[str, list[str]]) -> int:
         location = move(maps, location, instructions[steps_taken % len(instructions)])
         steps_taken += 1
     return steps_taken
+
+
+def reached_destination(locations: list[str]) -> bool:
+    return all(map(lambda location: location.endswith("Z"), locations))
+
+
+def exercise_2(data: tuple[str, list[str]]) -> int:
+    instructions, maps_raw = data
+    maps: dict[str, tuple[str, str]] = maps_as_dictionary(maps_raw)
+    locations: list[str] = list(filter(lambda position: position.endswith("A"), maps.keys()))
+    steps_taken = 0
+    while not reached_destination(locations):
+        locations = list(map(lambda location: move(maps, location, instructions[steps_taken % len(instructions)]), locations))
+        steps_taken += 1
+    return steps_taken
