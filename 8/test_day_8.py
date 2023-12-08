@@ -50,4 +50,4 @@ def test_exercise_2():
 
 
 def test_exercise_2_all_data():
-    print(exercise_2(data_full))
+    assert exercise_2(data_full) == 16342438708751
