@@ -1,4 +1,4 @@
-from functools import reduce
+import numpy as np
 
 
 def read_file_as_instructions_and_maps(filename: str) -> tuple[str, list[str]]:
@@ -57,7 +57,7 @@ def find_repeating_destinations(maps: dict[str, tuple[str, str]], instructions: 
             visited_positions_at_instruction[steps_taken % len(instructions)].append((location, steps_taken))
     # destinations_before_loop = list(filter(lambda p: p < loop_start, found_destination_positions))
     destinations_in_loop = list(filter(lambda p: p >= loop_start, found_destination_positions))
-    return list(map(lambda d: (d, steps_taken-loop_start), destinations_in_loop))
+    return list(map(lambda d: (d, steps_taken - loop_start), destinations_in_loop))
 
 
 def exercise_2(data: tuple[str, list[str]]) -> int:
@@ -65,5 +65,5 @@ def exercise_2(data: tuple[str, list[str]]) -> int:
     maps: dict[str, tuple[str, str]] = maps_as_dictionary(maps_raw)
     locations: list[str] = list(filter(lambda position: position.endswith("A"), maps.keys()))
     repeating_destinations_for_all_start_locations = list(map(lambda start_location: find_repeating_destinations(maps, instructions, start_location), locations))
-
-    return 0
+    destinations = list(map(lambda d: d[0][0], repeating_destinations_for_all_start_locations))
+    return np.lcm.reduce(destinations)
