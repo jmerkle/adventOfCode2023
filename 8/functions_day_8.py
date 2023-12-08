@@ -35,6 +35,28 @@ def reached_destination(locations: list[str]) -> bool:
     return all(map(lambda location: location.endswith("Z"), locations))
 
 
+def find_repeating_destinations(maps: dict[str, tuple[str, str]], instructions: str, start_location: str) -> list[tuple[int, int]]:
+    visited_positions_at_instruction = [[] for _ in range(len(instructions))]
+    visited_positions_at_instruction[0].append((start_location, 0))
+    found_destination_positions = []
+    location = start_location
+    steps_taken = 0
+    loop_start = -1
+    while loop_start < 0:
+        location = move(maps, location, instructions[steps_taken % len(instructions)])
+        steps_taken += 1
+        if location.endswith("Z"):
+            found_destination_positions.append(steps_taken)
+        previous_position = [x for x in visited_positions_at_instruction[steps_taken % len(instructions)] if x[0] == location]
+        if len(previous_position) > 0:
+            loop_start = previous_position[0][1]
+        else:
+            visited_positions_at_instruction[steps_taken % len(instructions)].append((location, steps_taken))
+    destinations_before_loop = list(filter(lambda p: p < loop_start, found_destination_positions))
+    destinations_in_loop = list(filter(lambda p: p >= loop_start, found_destination_positions))
+    return list(map(lambda d: (d, steps_taken-loop_start), destinations_in_loop))
+
+
 def exercise_2(data: tuple[str, list[str]]) -> int:
     instructions, maps_raw = data
     maps: dict[str, tuple[str, str]] = maps_as_dictionary(maps_raw)

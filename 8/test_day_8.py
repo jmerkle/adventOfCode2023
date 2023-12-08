@@ -34,6 +34,17 @@ def test_exercise_1_all_data():
     assert exercise_1(data_full) == 19951
 
 
+def test_find_repeating_destinations():
+    instructions, maps_raw = data_small_exercise_2
+    maps: dict[str, tuple[str, str]] = maps_as_dictionary(maps_raw)
+    result1 = find_repeating_destinations(maps, instructions, "11A")
+    assert result1[0] == (2, 2)
+
+    result2 = find_repeating_destinations(maps, instructions, "22A")
+    assert result2[0] == (3, 6)
+    assert result2[1] == (6, 6)
+
+
 def test_exercise_2():
     assert exercise_2(data_small_exercise_2) == 6
 
