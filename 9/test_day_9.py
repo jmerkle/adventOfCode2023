@@ -26,3 +26,15 @@ def test_exercise_1():
 def test_exercise_1_full():
     assert exercise_1(data_full) == 1647269739
 
+
+def test_extrapolate_backwards():
+    assert (extrapolate([[10, 13, 16, 21, 30, 45], [3, 3, 5, 9, 15], [0, 2, 4, 6], [2, 2, 2, 2], [0, 0, 0]], backwards=True)
+            == [[5, 10, 13, 16, 21, 30, 45], [5, 3, 3, 5, 9, 15], [-2, 0, 2, 4, 6], [2, 2, 2, 2, 2], [0, 0, 0, 0]])
+
+
+def test_exercise_2():
+    assert exercise_2(data_small) == 2
+
+
+def test_exercise_2_full():
+    assert exercise_2(data_full) == 864
