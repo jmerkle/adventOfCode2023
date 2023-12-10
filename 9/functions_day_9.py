@@ -19,14 +19,11 @@ def derive_all_line(line: list[int]) -> list[list[int]]:
 
 def _extrapolate(derived_reversed: list[list[int]]) -> list[list[int]]:
     if all(x == 0 for x in derived_reversed[0]):
-        zero_line = derived_reversed[0] + [0]
-        if len(derived_reversed) > 1:
-            next_line = derived_reversed[1] + [derived_reversed[1][-1]]
-            if len(derived_reversed) > 2:
-                return [zero_line] + _extrapolate([next_line] + derived_reversed[2:])
-            return [zero_line, next_line]
-        return [zero_line]
-    expanded_line = derived_reversed[0]
+        expanded_line = derived_reversed[0] + [0]
+        if len(derived_reversed) < 2:
+            return [expanded_line]
+    else:
+        expanded_line = derived_reversed[0]
     next_line = derived_reversed[1] + [derived_reversed[1][-1] + expanded_line[-1]]
     if len(derived_reversed) > 2:
         return [expanded_line] + _extrapolate([next_line] + derived_reversed[2:])

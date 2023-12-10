@@ -24,5 +24,5 @@ def test_exercise_1():
 
 
 def test_exercise_1_full():
-    print(exercise_1(data_full))
+    assert exercise_1(data_full) == 1647269739
 
