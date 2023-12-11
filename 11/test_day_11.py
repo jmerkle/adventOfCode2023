@@ -26,5 +26,5 @@ def test_exercise_1():
     assert exercise_1(data_small) == 374
 
 
-def test_exercise_1_all_data():
-    assert exercise_1(data_full) == 9565386
+def test_exercise_2_all_data():
+    assert exercise_1(data_full) == 857986849428

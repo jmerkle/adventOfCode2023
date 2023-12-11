@@ -28,8 +28,8 @@ def find_distance(galaxy_a: tuple[int, int], galaxy_b: tuple[int, int], expandin
     line_coords_ordered = sorted([galaxy_a[0], galaxy_b[0]])
     column_coords_ordered = sorted([galaxy_a[1], galaxy_b[1]])
     distance = line_coords_ordered[1] - line_coords_ordered[0] + column_coords_ordered[1] - column_coords_ordered[0]
-    distance += sum([line_coords_ordered[0] < line < line_coords_ordered[1] for line in expanding_lines])
-    distance += sum([column_coords_ordered[0] < column < column_coords_ordered[1] for column in expanding_columns])
+    distance += sum([line_coords_ordered[0] < line < line_coords_ordered[1] for line in expanding_lines])*(1000000-1)
+    distance += sum([column_coords_ordered[0] < column < column_coords_ordered[1] for column in expanding_columns])*(1000000-1)
     return distance
 
 
