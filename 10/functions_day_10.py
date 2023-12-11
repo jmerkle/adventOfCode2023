@@ -117,17 +117,16 @@ def fill_with_dots(output: str) -> str:
     return output
 
 
-def exercise_2(data: list[list[str]], start_line: int, start_column: int, start_direction: str, start_pipe_shape: str, start_incoming_direction: str)-> int:
+def initialise_exercise_2(data: list[list[str]], start_line: int, start_column: int, start_direction: str, start_pipe_shape: str, start_incoming_direction: str):
     areas = [["."]*len(data[0]) for i in range(len(data))]
     areas = mark_areas(areas, start_line, start_column, start_incoming_direction, start_pipe_shape)
-    steps_taken = 0
     position_line = start_line
     position_column = start_column
     direction = start_direction
-    while direction != "S":
-        areas, position_line, position_column, direction = take_step(data, areas, position_line, position_column, direction)
-        data[position_line][position_column] = "*"
-        steps_taken += 1
+    return areas, position_line, position_column, direction
+
+
+def post_process_exercise_2(data: list[list[str]], areas: list[list[str]]) -> int:
     visited_tiles = fill_with_dots(matrix_to_string(data))
     areas_as_string = matrix_to_string(areas)
     merged_maps = ""
@@ -139,3 +138,11 @@ def exercise_2(data: list[list[str]], start_line: int, start_column: int, start_
     while merged_maps.find("1.") > 0:
         merged_maps = merged_maps.replace("1.", "11")
     return sum([c == "1" for c in merged_maps])
+
+
+def exercise_2(data: list[list[str]], start_line: int, start_column: int, start_direction: str, start_pipe_shape: str, start_incoming_direction: str)-> int:
+    areas, position_line, position_column, direction = initialise_exercise_2(data, start_line, start_column, start_direction, start_pipe_shape, start_incoming_direction)
+    while direction != "S":
+        areas, position_line, position_column, direction = take_step(data, areas, position_line, position_column, direction)
+        data[position_line][position_column] = "*"
+    return post_process_exercise_2(data, areas)
