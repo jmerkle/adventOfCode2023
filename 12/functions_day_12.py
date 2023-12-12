@@ -1,4 +1,6 @@
 import re
+import itertools
+
 
 def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
     f = open(filename, 'r')
@@ -13,13 +15,16 @@ def validate_arrangement(line: str) -> bool:
     return groups_of_hash == check_values
 
 
-def apply_arrangement(line: str, arrangement: str) -> str:
+def find_all_q(line: list[str]) -> list[int]:
+    return [i for i in range(len(line)) if line[i] == "?"]
+
+
+def apply_arrangement(line: str, arrangement: list[int]) -> str:
+    line_as_list = list(line)
+    indexes_of_q = find_all_q(line_as_list)
     for i in arrangement:
-        if i=="1":
-            line = line.replace("?", "#", 1)
-        else:
-            line = line.replace("?", ".", 1)
-    return line
+        line_as_list[indexes_of_q[i]] = "#"
+    return "".join(line_as_list).replace("?", ".")
 
 
 def to_binary(number: int, num_digits: int) -> str:
@@ -27,12 +32,15 @@ def to_binary(number: int, num_digits: int) -> str:
 
 
 def count_possible_arrangements(line: str) -> int:
-    num_unknowns = sum([c == "?" for c in line])
+    record, check_values = line.split(" ")
+    num_unknowns = sum([c == "?" for c in record])
+    num_unplaced_hashs = sum([int(c) for c in check_values.split(",")]) - sum([c == "#" for c in record])
     possible_arrangements = 0
-    for i in range(0, 2**num_unknowns):
-        if validate_arrangement(apply_arrangement(line, to_binary(i, num_unknowns))):
+    for c in itertools.combinations(range(0, num_unknowns), num_unplaced_hashs):
+        if validate_arrangement(apply_arrangement(line, c)):
             possible_arrangements += 1
     return possible_arrangements
+
 
 def exercise_1(data: list[str]) -> int:
     return sum(list(map(count_possible_arrangements, data)))

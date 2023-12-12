@@ -12,8 +12,11 @@ def test_validate_arrangement():
     assert validate_arrangement(".###..###... 3,2,1") == False
 
 
+def test_find_all_q():
+    assert find_all_q(list("?#?#?#?#?#?#??#?")) == [0, 2, 4, 6, 8, 10, 12, 13, 15]
+
 def test_apply_arrangement():
-    assert apply_arrangement("???.### 1,1,3", "101") == "#.#.### 1,1,3"
+    assert apply_arrangement("???.### 1,1,3", (0, 2)) == "#.#.### 1,1,3"
 
 
 def test_find_arrangements():
