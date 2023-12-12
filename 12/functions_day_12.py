@@ -25,8 +25,8 @@ def record_could_start_with(record: str, check_value: int) -> bool:
     return False
 
 
-def generate_possible_remaining_records(record: str, check_value: int) -> list[str]:
-    if len(record) < check_value:
+def generate_possible_remaining_records(record: str, check_value: int, min_size:int = 0) -> list[str]:
+    if len(record) < check_value or len(record) < min_size:
         return []
     if len(record) == check_value:
         if record_could_start_with(record, check_value):
@@ -39,25 +39,35 @@ def generate_possible_remaining_records(record: str, check_value: int) -> list[s
     if record[0] == "#":
         return remaining
     else:
-        return remaining + generate_possible_remaining_records(record[1:], check_value)
+        return remaining + generate_possible_remaining_records(record[1:], check_value, min_size)
 
 
-def count_possible_arrangements(line: str) -> int:
+def count_possible_arrangements_rec(line: str, computed_results: dict[str, int] = {}) -> tuple[int, dict[str, int]]:
+    if line in computed_results:
+        return computed_results[line], computed_results
     record, check_values_str = remove_duplicate_dots(line).split(" ")
     check_values = [int(c) for c in check_values_str.split(",")]
-    possible_remaining_records = generate_possible_remaining_records(record, check_values[0])
     if len(check_values) == 1:
-        return len(list(filter(lambda r: "#" not in r, possible_remaining_records)))
+        counter = len(list(filter(lambda r: "#" not in r, generate_possible_remaining_records(record, check_values[0]))))
+        return counter, computed_results | {line: counter}
+    min_remaining_size = sum(check_values[1:]) + len(check_values[1:])
+    possible_remaining_records = generate_possible_remaining_records(record, check_values[0], min_remaining_size)
     counter = 0
     for r in possible_remaining_records:
-        counter += count_possible_arrangements(r + " " + ",".join([str(i) for i in check_values[1:]]))
-    return counter
+        new_count, new_computed_results = count_possible_arrangements_rec(r + " " + ",".join([str(i) for i in check_values[1:]]), computed_results)
+        counter += new_count
+        computed_results = computed_results | new_computed_results
+    return counter, computed_results | {line: counter}
 
 
 def remove_duplicate_dots(line: str) -> str:
     while line.replace("..", ".") != line:
         line = line.replace("..", ".")
     return line
+
+
+def count_possible_arrangements(line: str) -> int:
+    return count_possible_arrangements_rec(line)[0]
 
 
 def exercise_1(data: list[str]) -> int:

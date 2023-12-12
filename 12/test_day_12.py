@@ -23,7 +23,7 @@ def test_unfold_record():
 
 
 def test_find_arrangements_unfolded():
-    assert count_possible_arrangements(unfold_record("?.?????#???#? 1,1,2,2")) == 1
+    assert count_possible_arrangements(unfold_record("?.?????#???#? 1,1,2,2")) == 23570904
     assert count_possible_arrangements(unfold_record("???.### 1,1,3")) == 1
     assert count_possible_arrangements(unfold_record(".??..??...?##. 1,1,3")) == 16384
     assert count_possible_arrangements(unfold_record("?#?#?#?#?#?#?#? 1,3,1,6")) == 1
@@ -64,4 +64,4 @@ def test_exercise_2():
 
 
 def test_exercise_2_full_data():
-    assert exercise_2(data_full) == 525152
+    assert exercise_2(data_full) == 10861030975833
