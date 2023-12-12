@@ -8,6 +8,7 @@ def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
     f.close()
     return [x for x in data.split("\n") if len(x) > 0]
 
+
 def validate_arrangement(line: str) -> bool:
     record, check_values = line.split(" ")
     groups_of_hash = [len(group) for group in re.findall("#+", record)]
@@ -28,7 +29,7 @@ def apply_arrangement(line: str, arrangement: list[int]) -> str:
 
 
 def to_binary(number: int, num_digits: int) -> str:
-    return format(number, '0'+str(num_digits)+'b')
+    return format(number, '0' + str(num_digits) + 'b')
 
 
 def count_possible_arrangements(line: str) -> int:
@@ -44,3 +45,16 @@ def count_possible_arrangements(line: str) -> int:
 
 def exercise_1(data: list[str]) -> int:
     return sum(list(map(count_possible_arrangements, data)))
+
+
+def unfold_record(line: str) -> str:
+    factor = 5
+    record, check_values = line.split(" ")
+    unfolded_record = "?".join([record] * factor)
+    unfolded_check_values = ",".join([check_values] * factor)
+    return unfolded_record + " " + unfolded_check_values
+
+
+def exercise_2(data: list[str]) -> int:
+    unfolded_data = list(map(unfold_record, data))
+    return sum(list(map(count_possible_arrangements, unfolded_data)))

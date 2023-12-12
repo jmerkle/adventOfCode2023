@@ -15,6 +15,7 @@ def test_validate_arrangement():
 def test_find_all_q():
     assert find_all_q(list("?#?#?#?#?#?#??#?")) == [0, 2, 4, 6, 8, 10, 12, 13, 15]
 
+
 def test_apply_arrangement():
     assert apply_arrangement("???.### 1,1,3", (0, 2)) == "#.#.### 1,1,3"
 
@@ -34,3 +35,20 @@ def test_exercise_1():
 
 def test_exercise_1_full_data():
     assert exercise_1(data_full) == 7771
+
+
+def test_unfold_record():
+    assert unfold_record(".# 1") == ".#?.#?.#?.#?.# 1,1,1,1,1"
+
+
+def test_find_arrangements_unfolded():
+    assert count_possible_arrangements(unfold_record("???.### 1,1,3")) == 1
+    assert count_possible_arrangements(unfold_record(".??..??...?##. 1,1,3")) == 16384
+    assert count_possible_arrangements(unfold_record("?#?#?#?#?#?#?#? 1,3,1,6")) == 1
+    assert count_possible_arrangements(unfold_record("????.#...#... 4,1,1")) == 16
+    assert count_possible_arrangements(unfold_record("????.######..#####. 1,6,5")) == 2500
+    assert count_possible_arrangements(unfold_record("?###???????? 3,2,1")) == 506250
+
+
+def test_exercise_2():
+    assert exercise_2(data_small) == 525152
