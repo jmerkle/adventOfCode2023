@@ -64,5 +64,26 @@ def test_tilt_platform():
     assert (tilt_platform(platform, "n") == expected).all()
 
 
+def test_calculate_load():
+    platform = as_matrix([
+        "OOOO.#.O..",
+        "OO..#....#",
+        "OO..O##..O",
+        "O..#.OO...",
+        "........#.",
+        "..#....#.#",
+        "..O..#.O.O",
+        "..O.......",
+        "#....###..",
+        "#....#....",
+    ])
+
+    assert calculate_load(platform, "n") == 136
+
+
 def test_exercise_1():
     assert exercise_1(data_small) == 136
+
+
+def test_exercise_1_full_data():
+    assert exercise_1(data_full) == 110779

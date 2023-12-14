@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
     f = open(filename, 'r')
     data = f.read()
@@ -32,8 +33,14 @@ def tilt_platform(matrix: np.ndarray, direction: str) -> np.ndarray:
         rotated[line] = tilt_line(rotated[line])
     return matrix
 
+
+def calculate_load(matrix: np.ndarray, direction: str) -> int:
+    rotated = rotate_matrix_so_direction_points_right(matrix, direction)
+    locations_of_rocks = np.where(rotated == "O")
+    return sum(locations_of_rocks[1]) + + len(locations_of_rocks[1])
+
+
 def exercise_1(data: list[str]) -> int:
     platform = as_matrix(data)
     tilted = tilt_platform(platform, "n")
-    return 0
-
+    return calculate_load(tilted, "n")
