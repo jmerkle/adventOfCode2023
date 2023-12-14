@@ -87,3 +87,11 @@ def test_exercise_1():
 
 def test_exercise_1_full_data():
     assert exercise_1(data_full) == 110779
+
+
+def test_exercise_2():
+    assert exercise_2(data_small) == 64
+
+
+def test_exercise_2_full_data():
+    assert exercise_2(data_full) == 86069

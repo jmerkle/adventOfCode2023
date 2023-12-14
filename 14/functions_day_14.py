@@ -13,7 +13,13 @@ def as_matrix(data: list[str]) -> np.ndarray:
 
 
 def rotate_matrix_so_direction_points_right(matrix: np.ndarray, direction: str) -> np.ndarray:
-    return np.rot90(matrix, 3)
+    if direction == "n":
+        return np.rot90(matrix, 3)
+    if direction == "w":
+        return np.rot90(matrix, 2)
+    if direction == "s":
+        return np.rot90(matrix, 1)
+    return matrix
 
 
 def flatten_list(xss):
@@ -40,7 +46,22 @@ def calculate_load(matrix: np.ndarray, direction: str) -> int:
     return sum(locations_of_rocks[1]) + + len(locations_of_rocks[1])
 
 
+def run_cycle(matrix: np.ndarray) -> np.ndarray:
+    tilt_platform(matrix, "n")
+    tilt_platform(matrix, "w")
+    tilt_platform(matrix, "s")
+    tilt_platform(matrix, "e")
+    return matrix
+
+
 def exercise_1(data: list[str]) -> int:
     platform = as_matrix(data)
-    tilted = tilt_platform(platform, "n")
-    return calculate_load(tilted, "n")
+    tilt_platform(platform, "n")
+    return calculate_load(platform, "n")
+
+
+def exercise_2(data: list[str]) -> int:
+    platform = as_matrix(data)
+    for c in range(0, 1000):
+        run_cycle(platform)
+    return calculate_load(platform, "n")
