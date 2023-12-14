@@ -1,5 +1,4 @@
 import numpy as np
-from functools import lru_cache, wraps
 
 
 def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
@@ -55,30 +54,16 @@ def tuple_to_platform(platform_tuple: tuple[str, int, int]):
     return np.array(list(platform_tuple[0])).reshape(platform_tuple[1], platform_tuple[2])
 
 
-def np_cache(function):
-    @lru_cache(maxsize=1024)
-    def cached_wrapper(platform_tuple):
-        array = tuple_to_platform(platform_tuple)
-        return function(array)
-
-    @wraps(function)
-    def wrapper(array):
-        return cached_wrapper(platform_to_tuple(array))
-
-    # copy lru_cache attributes over too
-    wrapper.cache_info = cached_wrapper.cache_info
-    wrapper.cache_clear = cached_wrapper.cache_clear
-
-    return wrapper
-
-
-@np_cache
 def run_cycle(matrix: np.ndarray) -> np.ndarray:
     tilt_platform(matrix, "n")
     tilt_platform(matrix, "w")
     tilt_platform(matrix, "s")
     tilt_platform(matrix, "e")
     return matrix
+
+
+def merge_dictionaries(dict1, dict2):
+    return {key: dict1.get(key, []) + dict2.get(key, []) for key in set(dict1.keys()) | set(dict2.keys())}
 
 
 def exercise_1(data: list[str]) -> int:
@@ -88,7 +73,22 @@ def exercise_1(data: list[str]) -> int:
 
 
 def exercise_2(data: list[str]) -> int:
+    max_cycles = 1000000000
     platform = as_matrix(data)
-    for c in range(0, 1000000000):
-        platform = run_cycle(platform.copy())
+    platform_as_tuple = platform_to_tuple(platform)
+    cycle_tracker = {}
+    cycle_detected = False
+    c = -1
+    while not cycle_detected and c < max_cycles:
+        c += 1
+        run_cycle(platform)
+        platform_as_tuple = platform_to_tuple(platform)
+        cycle_tracker = merge_dictionaries(cycle_tracker, { platform_to_tuple(platform): [c] })
+        if len(cycle_tracker.get(platform_as_tuple)) > 1:
+            cycle_detected = True
+    cycle = cycle_tracker.get(platform_as_tuple)
+    remaining_cycles = (max_cycles-max(cycle))%(max(cycle) - min(cycle))
+    print("cycle detected at ", cycle, ", ", remaining_cycles, " cycles remaining.")
+    for i in range(0, remaining_cycles-1):
+        run_cycle(platform)
     return calculate_load(platform, "n")
