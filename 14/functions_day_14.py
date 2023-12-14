@@ -46,14 +46,6 @@ def calculate_load(matrix: np.ndarray, direction: str) -> int:
     return sum(locations_of_rocks[1]) + + len(locations_of_rocks[1])
 
 
-def platform_to_tuple(matrix: np.ndarray) -> tuple[str, int, int]:
-    return "".join(matrix.flatten().tolist()), matrix.shape[0], matrix.shape[1]
-
-
-def tuple_to_platform(platform_tuple: tuple[str, int, int]):
-    return np.array(list(platform_tuple[0])).reshape(platform_tuple[1], platform_tuple[2])
-
-
 def run_cycle(matrix: np.ndarray) -> np.ndarray:
     tilt_platform(matrix, "n")
     tilt_platform(matrix, "w")
@@ -66,6 +58,10 @@ def merge_dictionaries(dict1, dict2):
     return {key: dict1.get(key, []) + dict2.get(key, []) for key in set(dict1.keys()) | set(dict2.keys())}
 
 
+def platform_as_string(matrix: np.ndarray) -> str:
+    return "".join(matrix.flatten().tolist())
+
+
 def exercise_1(data: list[str]) -> int:
     platform = as_matrix(data)
     tilt_platform(platform, "n")
@@ -75,20 +71,20 @@ def exercise_1(data: list[str]) -> int:
 def exercise_2(data: list[str]) -> int:
     max_cycles = 1000000000
     platform = as_matrix(data)
-    platform_as_tuple = platform_to_tuple(platform)
+    platform_string = platform_as_string(platform)
     cycle_tracker = {}
     cycle_detected = False
     c = -1
     while not cycle_detected and c < max_cycles:
         c += 1
         run_cycle(platform)
-        platform_as_tuple = platform_to_tuple(platform)
-        cycle_tracker = merge_dictionaries(cycle_tracker, { platform_to_tuple(platform): [c] })
-        if len(cycle_tracker.get(platform_as_tuple)) > 1:
+        platform_string = platform_as_string(platform)
+        cycle_tracker = merge_dictionaries(cycle_tracker, {platform_as_string(platform): [c]})
+        if len(cycle_tracker.get(platform_string)) > 1:
             cycle_detected = True
-    cycle = cycle_tracker.get(platform_as_tuple)
-    remaining_cycles = (max_cycles-max(cycle))%(max(cycle) - min(cycle))
+    cycle = cycle_tracker.get(platform_string)
+    remaining_cycles = (max_cycles - max(cycle)) % (max(cycle) - min(cycle))
     print("cycle detected at ", cycle, ", ", remaining_cycles, " cycles remaining.")
-    for i in range(0, remaining_cycles-1):
+    for i in range(0, remaining_cycles - 1):
         run_cycle(platform)
     return calculate_load(platform, "n")
