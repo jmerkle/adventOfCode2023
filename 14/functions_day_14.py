@@ -1,4 +1,5 @@
 import numpy as np
+from functools import lru_cache, wraps
 
 
 def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
@@ -46,6 +47,32 @@ def calculate_load(matrix: np.ndarray, direction: str) -> int:
     return sum(locations_of_rocks[1]) + + len(locations_of_rocks[1])
 
 
+def platform_to_tuple(matrix: np.ndarray) -> tuple[str, int, int]:
+    return "".join(matrix.flatten().tolist()), matrix.shape[0], matrix.shape[1]
+
+
+def tuple_to_platform(platform_tuple: tuple[str, int, int]):
+    return np.array(list(platform_tuple[0])).reshape(platform_tuple[1], platform_tuple[2])
+
+
+def np_cache(function):
+    @lru_cache(maxsize=1024)
+    def cached_wrapper(platform_tuple):
+        array = tuple_to_platform(platform_tuple)
+        return function(array)
+
+    @wraps(function)
+    def wrapper(array):
+        return cached_wrapper(platform_to_tuple(array))
+
+    # copy lru_cache attributes over too
+    wrapper.cache_info = cached_wrapper.cache_info
+    wrapper.cache_clear = cached_wrapper.cache_clear
+
+    return wrapper
+
+
+@np_cache
 def run_cycle(matrix: np.ndarray) -> np.ndarray:
     tilt_platform(matrix, "n")
     tilt_platform(matrix, "w")
@@ -62,6 +89,6 @@ def exercise_1(data: list[str]) -> int:
 
 def exercise_2(data: list[str]) -> int:
     platform = as_matrix(data)
-    for c in range(0, 1000):
-        run_cycle(platform)
+    for c in range(0, 1000000000):
+        platform = run_cycle(platform.copy())
     return calculate_load(platform, "n")

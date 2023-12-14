@@ -80,6 +80,22 @@ def test_calculate_load():
 
     assert calculate_load(platform, "n") == 136
 
+def test_to_and_from_tuple():
+    platform = as_matrix([
+        "OOOO.#.O..",
+        "OO..#....#",
+        "OO..O##..O",
+        "O..#.OO...",
+        "........#.",
+        "..#....#.#",
+        "..O..#.O.O",
+        "..O.......",
+        "#....###..",
+    ])
+
+    as_tuple = platform_to_tuple(platform)
+    assert (platform == tuple_to_platform(as_tuple)).all()
+
 
 def test_exercise_1():
     assert exercise_1(data_small) == 136
