@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, TypeAlias
 
 
 def read_file_and_split_on_comma(filename: str):
@@ -25,3 +25,41 @@ def box_and_operation(step_input: str) -> tuple[int, Optional[int]]:
         return hash_function(step_input[:-1]), None
     label, focal_length = step_input.split("=")
     return hash_function(label), int(focal_length)
+
+LabeledLens: TypeAlias = tuple[str, int]
+Box: TypeAlias = list[LabeledLens]
+
+
+def find_labeled_lens_in_box(box: Box, label: str) -> Optional[int]:
+    return next((i for i, existing_lens in enumerate(box) if existing_lens[0] == label), None)
+
+
+def remove_from_box(box: Box, label: str) -> Box:
+    index_of_lens_with_label = find_labeled_lens_in_box(box, label)
+    if index_of_lens_with_label is not None:
+        del(box[index_of_lens_with_label])
+    return box
+
+
+def add_to_box(box: Box, lens: LabeledLens) -> Box:
+    index_of_lens_with_label = find_labeled_lens_in_box(box, lens[0])
+    if index_of_lens_with_label is None:
+        box.append(lens)
+    else:
+        box[index_of_lens_with_label] = lens
+    return box
+
+
+def perform_step(boxes: list[Box], step_input: str) -> list[list[str]]:
+    return []
+
+
+def focal_power(boxes: list[Box]) -> int:
+    return 0
+
+
+def exercise_2(data: list[str]) -> int:
+    boxes = [[] for _ in range(256)]
+    for step_input in data:
+        boxes = perform_step(boxes, step_input)
+    return focal_power(boxes)
