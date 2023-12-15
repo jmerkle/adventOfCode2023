@@ -1,4 +1,4 @@
-import numpy as np
+from typing import Optional
 
 
 def read_file_and_split_on_comma(filename: str):
@@ -19,3 +19,9 @@ def hash_function(input_string: str) -> int:
 def exercise_1(data: list[str]) -> int:
     return sum(list(map(hash_function, data)))
 
+
+def box_and_operation(step_input: str) -> tuple[int, Optional[int]]:
+    if step_input[-1] == "-":
+        return hash_function(step_input[:-1]), None
+    label, focal_length = step_input.split("=")
+    return hash_function(label), int(focal_length)
