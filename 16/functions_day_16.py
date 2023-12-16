@@ -133,6 +133,16 @@ def count_energized_tiles(grid: EnergizedGrid) -> int:
 
 
 def exercise_1(data: Grid) -> int:
-    start_movement = (Direction.RIGHT, (0, 0))
-    energized_grid = energize(data, start_movement)
-    return count_energized_tiles(energized_grid)
+    return energize_and_count(data, (Direction.RIGHT, (0, 0)))
+
+
+def energize_and_count(grid: Grid, start_movement: BeamMovement) -> int:
+    return count_energized_tiles(energize(grid, start_movement))
+
+
+def exercise_2(data: Grid) -> int:
+    down = max([energize_and_count(data, (Direction.DOWN, (0, c))) for c in range(len(data[0]))])
+    up = max([energize_and_count(data, (Direction.UP, (len(data) - 1, c))) for c in range(len(data[0]))])
+    right = max([energize_and_count(data, (Direction.RIGHT, (r, 0))) for r in range(len(data))])
+    left = max([energize_and_count(data, (Direction.LEFT, (r, len(data[0]) - 1))) for r in range(len(data))])
+    return max(down, up, right, left)
