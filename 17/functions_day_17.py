@@ -52,6 +52,15 @@ def calculate_possible_movements(data: Grid, position: MovementNode) -> dict[Mov
     return possible_movements
 
 
+def reverse_path(previous: dict[MovementNode, MovementNode], node: MovementNode) -> list[MovementNode]:
+    li = [node]
+    n = node
+    while previous.get(n, None) is not None:
+        n = previous.get(n)
+        li.append(n)
+    return list(reversed(li))
+
+
 def dijkstra(data: Grid, start_position: MovementNode, destination: tuple[int, int]) -> int:
     processed = set()
     distances = {}
