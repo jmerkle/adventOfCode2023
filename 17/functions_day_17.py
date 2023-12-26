@@ -52,6 +52,36 @@ def calculate_possible_movements(data: Grid, position: MovementNode) -> dict[Mov
     return possible_movements
 
 
+def calculate_possible_movements_ultra(data: Grid, position: MovementNode) -> dict[MovementNode, int]:
+    row, column, direction, steps_taken = position
+    possible_movements = {}
+    # up
+    if row > 0 and direction is not direction.DOWN:
+        if direction is not Direction.UP and (steps_taken > 3 or steps_taken == 0):
+            possible_movements.update({(row - 1, column, Direction.UP, 1): data[row - 1][column]})
+        elif direction is Direction.UP and steps_taken < 10:
+            possible_movements.update({(row - 1, column, Direction.UP, steps_taken + 1): data[row - 1][column]})
+    # right
+    if column < len(data[0]) - 1 and direction is not direction.LEFT:
+        if direction is not Direction.RIGHT and (steps_taken > 3 or steps_taken == 0):
+            possible_movements.update({(row, column + 1, Direction.RIGHT, 1): data[row][column + 1]})
+        elif direction is Direction.RIGHT and steps_taken < 10:
+            possible_movements.update({(row, column + 1, Direction.RIGHT, steps_taken + 1): data[row][column + 1]})
+    # down
+    if row < len(data) - 1 and direction is not direction.UP:
+        if direction is not Direction.DOWN and (steps_taken > 3 or steps_taken == 0):
+            possible_movements.update({(row + 1, column, Direction.DOWN, 1): data[row + 1][column]})
+        elif direction is Direction.DOWN and steps_taken < 10:
+            possible_movements.update({(row + 1, column, Direction.DOWN, steps_taken + 1): data[row + 1][column]})
+    # left
+    if column > 0 and direction is not direction.RIGHT:
+        if direction is not Direction.LEFT and (steps_taken > 3 or steps_taken == 0):
+            possible_movements.update({(row, column - 1, Direction.LEFT, 1): data[row][column - 1]})
+        elif direction is Direction.LEFT and steps_taken < 10:
+            possible_movements.update({(row, column - 1, Direction.LEFT, steps_taken + 1): data[row][column - 1]})
+    return possible_movements
+
+
 def reverse_path(previous: dict[MovementNode, MovementNode], node: MovementNode) -> list[MovementNode]:
     li = [node]
     n = node
@@ -79,7 +109,7 @@ def draw_path(data: Grid, movement: list[MovementNode]) -> Grid:
     return newgrid
 
 
-def dijkstra(data: Grid, start_position: MovementNode, destination: tuple[int, int]) -> int:
+def dijkstra(data: Grid, start_position: MovementNode, destination: tuple[int, int], ultra: bool = False) -> int:
     processed = set()
     distances = {}
     previous = {}
@@ -93,7 +123,11 @@ def dijkstra(data: Grid, start_position: MovementNode, destination: tuple[int, i
             processed.add(current_position)
             if current_position[0] == destination[0] and current_position[1] == destination[1]:
                 terminal_nodes.add(current_position)
-            for possible_movement, distance in calculate_possible_movements(data, current_position).items():
+            if ultra:
+                pm = calculate_possible_movements_ultra(data, current_position)
+            else:
+                pm = calculate_possible_movements(data, current_position)
+            for possible_movement, distance in pm.items():
                 alt = distances.get(current_position) + distance
                 if alt < distances.get(possible_movement, sys.maxsize):
                     distances.update({possible_movement: alt})
@@ -107,3 +141,7 @@ def dijkstra(data: Grid, start_position: MovementNode, destination: tuple[int, i
 
 def exercise_1(data: Grid) -> int:
     return dijkstra(data, (0, 0, Direction.RIGHT, 0), (len(data)-1, len(data[0])-1))
+
+
+def exercise_2(data: Grid) -> int:
+    return dijkstra(data, (0, 0, Direction.RIGHT, 0), (len(data)-1, len(data[0])-1), True)
