@@ -1,8 +1,10 @@
-from enum import Enum
+import sys
+from enum import IntEnum
 from typing import TypeAlias
+from queue import PriorityQueue
 
 
-class Direction(Enum):
+class Direction(IntEnum):
     UP = 0
     RIGHT = 1
     DOWN = 2
@@ -26,30 +28,53 @@ def calculate_possible_movements(data: Grid, position: MovementNode) -> dict[Mov
     # up
     if row > 0:
         if direction is not Direction.UP:
-            possible_movements.update({(row-1, column, Direction.UP, 1): data[row-1][column]})
+            possible_movements.update({(row - 1, column, Direction.UP, 1): data[row - 1][column]})
         elif steps_taken < 3:
-            possible_movements.update({(row-1, column, Direction.UP, steps_taken + 1): data[row-1][column]})
+            possible_movements.update({(row - 1, column, Direction.UP, steps_taken + 1): data[row - 1][column]})
     # right
-    if column < len(data[0])-1:
+    if column < len(data[0]) - 1:
         if direction is not Direction.RIGHT:
-            possible_movements.update({(row, column+1, Direction.RIGHT, 1): data[row][column+1]})
+            possible_movements.update({(row, column + 1, Direction.RIGHT, 1): data[row][column + 1]})
         elif steps_taken < 3:
-            possible_movements.update({(row, column+1, Direction.RIGHT, steps_taken + 1): data[row][column+1]})
+            possible_movements.update({(row, column + 1, Direction.RIGHT, steps_taken + 1): data[row][column + 1]})
     # down
-    if row < len(data)-1:
+    if row < len(data) - 1:
         if direction is not Direction.DOWN:
-            possible_movements.update({(row+1, column, Direction.DOWN, 1): data[row+1][column]})
+            possible_movements.update({(row + 1, column, Direction.DOWN, 1): data[row + 1][column]})
         elif steps_taken < 3:
-            possible_movements.update({(row+1, column, Direction.DOWN, steps_taken + 1): data[row+1][column]})
+            possible_movements.update({(row + 1, column, Direction.DOWN, steps_taken + 1): data[row + 1][column]})
     # left
     if column > 0:
         if direction is not Direction.LEFT:
-            possible_movements.update({(row, column-1, Direction.LEFT, 1): data[row][column-1]})
+            possible_movements.update({(row, column - 1, Direction.LEFT, 1): data[row][column - 1]})
         elif steps_taken < 3:
-            possible_movements.update({(row, column-1, Direction.LEFT, steps_taken + 1): data[row][column-1]})
+            possible_movements.update({(row, column - 1, Direction.LEFT, steps_taken + 1): data[row][column - 1]})
     return possible_movements
 
 
+def dijkstra(data: Grid, start_position: MovementNode, destination: tuple[int, int]) -> int:
+    processed = set()
+    distances = {}
+    previous = {}
+    terminal_nodes = set()
+    q = PriorityQueue()
+    q.put((0, start_position))
+    distances.update({start_position: 0})
+    while q.qsize() > 0:
+        prio, current_position = q.get_nowait()
+        if current_position not in processed:
+            processed.add(current_position)
+            if current_position[0] == destination[0] and current_position[1] == destination[1]:
+                terminal_nodes.add(current_position)
+            for possible_movement, distance in calculate_possible_movements(data, current_position).items():
+                alt = distances.get(current_position) + distance
+                if alt < distances.get(possible_movement, sys.maxsize):
+                    distances.update({possible_movement: alt})
+                    previous.update({possible_movement: current_position})
+                    q.put((alt, possible_movement))
+    terminal_distances = [distances.get(n) for n in terminal_nodes]
+    return min(terminal_distances)
+
 
 def exercise_1(data: Grid) -> int:
-    return 0
+    return dijkstra(data, (0, 0, Direction.UP, 0), (len(data)-1, len(data[0])-1))
