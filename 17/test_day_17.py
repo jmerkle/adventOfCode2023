@@ -9,7 +9,7 @@ def test_possible_movements():
             [3, 2, 1],
             [3, 2, 5]]
 
-    assert (calculate_possible_movements(grid, (0, 0, Direction.UP, 0)) ==
+    assert (calculate_possible_movements(grid, (0, 0, Direction.RIGHT, 0)) ==
             {
                 (0, 1, Direction.RIGHT, 1): 4,
                 (1, 0, Direction.DOWN, 1): 3
@@ -19,17 +19,14 @@ def test_possible_movements():
             {
                 (0, 1, Direction.UP, 3): 4,
                 (1, 2, Direction.RIGHT, 1): 1,
-                (2, 1, Direction.DOWN, 1): 2,
                 (1, 0, Direction.LEFT, 1): 3
             })
 
     assert (calculate_possible_movements(grid, (1, 1, Direction.UP, 3)) ==
             {
                 (1, 2, Direction.RIGHT, 1): 1,
-                (2, 1, Direction.DOWN, 1): 2,
                 (1, 0, Direction.LEFT, 1): 3
             })
-
 
 
 def test_exercise_1():

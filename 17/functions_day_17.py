@@ -26,26 +26,26 @@ def calculate_possible_movements(data: Grid, position: MovementNode) -> dict[Mov
     row, column, direction, steps_taken = position
     possible_movements = {}
     # up
-    if row > 0:
+    if row > 0 and direction is not direction.DOWN:
         if direction is not Direction.UP:
             possible_movements.update({(row - 1, column, Direction.UP, 1): data[row - 1][column]})
         elif steps_taken < 3:
             possible_movements.update({(row - 1, column, Direction.UP, steps_taken + 1): data[row - 1][column]})
     # right
-    if column < len(data[0]) - 1:
+    if column < len(data[0]) - 1 and direction is not direction.LEFT:
         if direction is not Direction.RIGHT:
             possible_movements.update({(row, column + 1, Direction.RIGHT, 1): data[row][column + 1]})
         elif steps_taken < 3:
             possible_movements.update({(row, column + 1, Direction.RIGHT, steps_taken + 1): data[row][column + 1]})
     # down
-    if row < len(data) - 1:
+    if row < len(data) - 1 and direction is not direction.UP:
         if direction is not Direction.DOWN:
             possible_movements.update({(row + 1, column, Direction.DOWN, 1): data[row + 1][column]})
         elif steps_taken < 3:
             possible_movements.update({(row + 1, column, Direction.DOWN, steps_taken + 1): data[row + 1][column]})
     # left
     if column > 0:
-        if direction is not Direction.LEFT:
+        if direction is not Direction.LEFT and direction is not direction.RIGHT:
             possible_movements.update({(row, column - 1, Direction.LEFT, 1): data[row][column - 1]})
         elif steps_taken < 3:
             possible_movements.update({(row, column - 1, Direction.LEFT, steps_taken + 1): data[row][column - 1]})
