@@ -44,8 +44,8 @@ def calculate_possible_movements(data: Grid, position: MovementNode) -> dict[Mov
         elif steps_taken < 3:
             possible_movements.update({(row + 1, column, Direction.DOWN, steps_taken + 1): data[row + 1][column]})
     # left
-    if column > 0:
-        if direction is not Direction.LEFT and direction is not direction.RIGHT:
+    if column > 0 and direction is not direction.RIGHT:
+        if direction is not Direction.LEFT:
             possible_movements.update({(row, column - 1, Direction.LEFT, 1): data[row][column - 1]})
         elif steps_taken < 3:
             possible_movements.update({(row, column - 1, Direction.LEFT, steps_taken + 1): data[row][column - 1]})
@@ -59,6 +59,24 @@ def reverse_path(previous: dict[MovementNode, MovementNode], node: MovementNode)
         n = previous.get(n)
         li.append(n)
     return list(reversed(li))
+
+
+def draw_path(data: Grid, movement: list[MovementNode]) -> Grid:
+    newgrid = data.copy()
+    for m in movement:
+        row, column, direction, _ = m
+        symbol = "."
+        match direction:
+            case Direction.UP:
+                symbol = "^"
+            case Direction.RIGHT:
+                symbol = ">"
+            case Direction.DOWN:
+                symbol = "v"
+            case Direction.LEFT:
+                symbol = "<"
+        newgrid[row][column] = symbol
+    return newgrid
 
 
 def dijkstra(data: Grid, start_position: MovementNode, destination: tuple[int, int]) -> int:
@@ -82,8 +100,10 @@ def dijkstra(data: Grid, start_position: MovementNode, destination: tuple[int, i
                     previous.update({possible_movement: current_position})
                     q.put((alt, possible_movement))
     terminal_distances = [distances.get(n) for n in terminal_nodes]
+    rev_path = reverse_path(previous, list(terminal_nodes)[0])
+    grid_with_path = draw_path(data, rev_path)
     return min(terminal_distances)
 
 
 def exercise_1(data: Grid) -> int:
-    return dijkstra(data, (0, 0, Direction.UP, 0), (len(data)-1, len(data[0])-1))
+    return dijkstra(data, (0, 0, Direction.RIGHT, 0), (len(data)-1, len(data[0])-1))

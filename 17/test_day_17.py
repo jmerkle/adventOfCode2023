@@ -31,3 +31,7 @@ def test_possible_movements():
 
 def test_exercise_1():
     assert exercise_1(data_small) == 102
+
+
+def test_exercise_1_full():
+    assert exercise_1(data_full) == 843
