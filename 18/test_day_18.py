@@ -38,7 +38,7 @@ def test_draw_up():
 
 def test_resize_new_grid_right():
     grid = [["."]]
-    resize_right(grid, 5)
+    grid = resize_right(grid, 5)
     assert grid == [[".", ".", ".", ".", ".", "."]]
 
 
@@ -49,7 +49,7 @@ def test_resize_existing_grid_right():
         ["#", ".", "#"],
         ["#", "#", "#"]
             ]
-    resize_right(grid, 2)
+    grid = resize_right(grid, 2)
     assert grid == [
         ["#", "#", "#", ".", "."],
         ["#", ".", "#", ".", "."],
@@ -60,7 +60,7 @@ def test_resize_existing_grid_right():
 
 def test_resize_new_grid_down():
     grid = [["."]]
-    resize_down(grid, 5)
+    grid = resize_down(grid, 5)
     assert grid == [["."], ["."], ["."], ["."], ["."], ["."]]
 
 
@@ -71,7 +71,7 @@ def test_resize_existing_grid_down():
         ["#", ".", "#"],
         ["#", "#", "#"]
     ]
-    resize_down(grid, 2)
+    grid = resize_down(grid, 2)
     assert grid == [
         ["#", "#", "#"],
         ["#", ".", "#"],
@@ -79,6 +79,40 @@ def test_resize_existing_grid_down():
         ["#", "#", "#"],
         [".", ".", "."],
         [".", ".", "."]
+    ]
+
+
+def test_resize_existing_grid_left():
+    grid = [
+        ["#", "#", "#"],
+        ["#", ".", "#"],
+        ["#", ".", "#"],
+        ["#", "#", "#"]
+    ]
+    grid = resize_left(grid, 2)
+    assert grid == [
+        [".", ".", "#", "#", "#"],
+        [".", ".", "#", ".", "#"],
+        [".", ".", "#", ".", "#"],
+        [".", ".", "#", "#", "#"]
+    ]
+
+
+def test_resize_existing_grid_up():
+    grid = [
+        ["#", "#", "#"],
+        ["#", ".", "#"],
+        ["#", ".", "#"],
+        ["#", "#", "#"]
+    ]
+    grid = resize_up(grid, 2)
+    assert grid == [
+        [".", ".", "."],
+        [".", ".", "."],
+        ["#", "#", "#"],
+        ["#", ".", "#"],
+        ["#", ".", "#"],
+        ["#", "#", "#"]
     ]
 
 
