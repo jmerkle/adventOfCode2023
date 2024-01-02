@@ -11,20 +11,21 @@ def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
 
 
 class Direction(Enum):
-    UP = "U"
     RIGHT = "R"
     DOWN = "D"
     LEFT = "L"
+    UP = "U"
 
 
-Command: TypeAlias = tuple[Direction, int, hex]
+
+Command: TypeAlias = tuple[Direction, int]
 Grid: TypeAlias = list[list[str]]
 Position: TypeAlias = tuple[int, int]
 
 
 def parse_command(command_string: str) -> Command:
     d, n, h = command_string.split()
-    return Direction(d), int(n), int("0x" + h[2:-1], base=16)
+    return Direction(d), int(n)
 
 
 def draw_right(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
@@ -144,3 +145,10 @@ def exercise_1(data: list[str]) -> int:
     filled_grid = fill_shape(grid, inner_point)
     filled_grid_as_string = matrix_to_string(filled_grid)
     return filled_grid_as_string.count("#")
+
+
+def hex_to_command(hex_string: str) -> Command:
+    distance = int(hex_string[1:6], base=16)
+    direction = int(hex_string[6], base=16)
+    return list(Direction)[direction], distance
+

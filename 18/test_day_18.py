@@ -5,7 +5,7 @@ data_full = read_file_as_list_of_lines_and_filter_empty_lines('input.txt')
 
 
 def test_parse_command():
-    assert parse_command("R 6 (#70c710)") == (Direction.RIGHT, 6, 0X70c710)
+    assert parse_command("R 6 (#70c710)") == (Direction.RIGHT, 6)
 
 
 def test_draw_right():
@@ -125,6 +125,7 @@ def test_find_inner_point_left_edge():
     ]
     assert find_inner_point(grid) == (1, 1)
 
+
 def test_find_inner_point_middle():
     grid = [
         [".", "#", "#", "#", "."],
@@ -141,3 +142,10 @@ def test_exercise_1():
 
 def test_exercise_1_full():
     assert exercise_1(data_full) == 45159
+
+
+def test_convert_hex_to_command():
+    assert hex_to_command("#70c710") == (Direction.RIGHT, 461937)
+    assert hex_to_command("#0dc571") == (Direction.DOWN, 56407)
+    assert hex_to_command("#8ceee2") == (Direction.LEFT, 577262)
+    assert hex_to_command("#caa173") == (Direction.UP, 829975)
