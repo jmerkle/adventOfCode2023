@@ -4,5 +4,9 @@ data_small = read_file_as_list_of_lines_and_filter_empty_lines('input_small.txt'
 data_full = read_file_as_list_of_lines_and_filter_empty_lines('input.txt')
 
 
+def test_parse_command():
+    assert parse_command("R 6 (#70c710)") == (Direction.RIGHT, 6, 0X70c710)
+
+
 def test_exercise_1():
     assert exercise_1(data_small) == 62
