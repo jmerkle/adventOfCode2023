@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import TypeAlias
+import queue
 
 
 def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
@@ -117,13 +118,29 @@ def find_inner_point(grid: Grid) -> Position:
                 return row, column + 2
 
 
+def fill_shape(grid: Grid, inner_point: Position) -> Grid:
+    point_queue = queue.Queue()
+    point_queue.put(inner_point)
+    while point_queue.qsize() > 0:
+        row, column = point_queue.get()
+        if grid[row][column] == ".":
+            grid[row][column] = "#"
+            point_queue.put((row - 1, column))
+            point_queue.put((row, column + 1))
+            point_queue.put((row + 1, column))
+            point_queue.put((row, column - 1))
+    return grid
+
+
 def exercise_1(data: list[str]) -> int:
     grid = [["."]]
     position = (0, 0)
     for command_string in data:
         command = parse_command(command_string)
         grid, position = draw(grid, position, command)
-        matrix_as_string = matrix_to_string(grid)
-        print(matrix_as_string)
+        grid_as_string = matrix_to_string(grid)
+        print(grid_as_string)
     inner_point = find_inner_point(grid)
-    return 0
+    filled_grid = fill_shape(grid, inner_point)
+    filled_grid_as_string = matrix_to_string(filled_grid)
+    return filled_grid_as_string.count("#")
