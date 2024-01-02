@@ -84,3 +84,7 @@ def test_resize_existing_grid_down():
 
 def test_exercise_1():
     assert exercise_1(data_small) == 62
+
+
+def test_exercise_1_full():
+    assert exercise_1(data_full) == 62

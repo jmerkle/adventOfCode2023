@@ -85,8 +85,12 @@ def resize_right(grid: Grid, n: int) -> Grid:
 def resize_down(grid: Grid, n: int) -> Grid:
     num_columns = len(grid[0])
     new_rows = [["." for _ in range(num_columns)] for _ in range(n)]
-    grid = grid.extend(new_rows)
+    grid.extend(new_rows)
     return grid
+
+
+def matrix_to_string(data: list[list[str]]) -> str:
+    return "\n".join(["".join(line) for line in data])
 
 
 def exercise_1(data: list[str]) -> int:
@@ -95,4 +99,5 @@ def exercise_1(data: list[str]) -> int:
     for command_string in data:
         command = parse_command(command_string)
         grid, position = draw(grid, position, command)
+    matrix_as_string = matrix_to_string(grid)
     return 0
