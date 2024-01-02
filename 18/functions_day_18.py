@@ -35,11 +35,23 @@ def draw_right(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Po
     return grid, (row, column + num_steps)
 
 
+def draw_down(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
+    row, column = position
+    resize_by = row + num_steps - len(grid) + 1
+    if resize_by > 0:
+        resize_down(grid, resize_by)
+    for r in range(row, row+num_steps + 1):
+        grid[r][column] = "#"
+    return grid, (row + num_steps, column)
+
+
 def draw(grid: Grid, position: Position, command: Command) -> tuple[Grid, Position]:
     direction, num_steps, _ = command
     match direction:
         case Direction.RIGHT:
             return draw_right(grid, position, num_steps)
+        case Direction.DOWN:
+            return draw_down(grid, position, num_steps)
     return 0
 
 

@@ -15,6 +15,13 @@ def test_draw_right():
     assert draw(grid, position, command) == ([["#", "#", "#", "#", "#", "#", "#"]], (0, 6))
 
 
+def test_draw_down():
+    command = (Direction.DOWN, 5, 0X0dc571)
+    grid = [["."]]
+    position = (0, 0)
+    assert draw(grid, position, command) == ([["#"], ["#"], ["#"], ["#"], ["#"], ["#"]], (5, 0))
+
+
 def test_resize_new_grid_right():
     grid = [["."]]
     resize_right(grid, 5)
