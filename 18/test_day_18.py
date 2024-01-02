@@ -9,130 +9,152 @@ def test_parse_command():
 
 
 def test_draw_right():
-    command = (Direction.RIGHT, 6, 0X70c710)
-    grid = [["."]]
+    command = (Direction.RIGHT, 6)
+    grid = np.array([[0]])
     position = (0, 0)
-    assert draw(grid, position, command) == ([["#", "#", "#", "#", "#", "#", "#"]], (0, 6))
+    grid, position = draw(grid, position, command)
+    assert (grid == [[1, 1, 1, 1, 1, 1, 1]]).all()
+    assert position == (0, 6)
 
 
 def test_draw_down():
-    command = (Direction.DOWN, 5, 0X0dc571)
-    grid = [["."]]
+    command = (Direction.DOWN, 5)
+    grid = np.array([[0]])
     position = (0, 0)
-    assert draw(grid, position, command) == ([["#"], ["#"], ["#"], ["#"], ["#"], ["#"]], (5, 0))
+    grid, position = draw(grid, position, command)
+    assert (grid == [
+        [1],
+        [1],
+        [1],
+        [1],
+        [1],
+        [1]
+    ]).all()
+    assert position == (5, 0)
 
 
 def test_draw_left():
-    command = (Direction.LEFT, 2, 0X70c710)
-    grid = [[".", ".", "."]]
+    command = (Direction.LEFT, 2)
+    grid = np.array([[0, 0, 0]])
     position = (0, 2)
-    assert draw(grid, position, command) == ([["#", "#", "#"]], (0, 0))
+    grid, position = draw(grid, position, command)
+    assert (grid == [[1, 1, 1]]).all()
+    assert position == (0, 0)
 
 
 def test_draw_up():
-    command = (Direction.UP, 1, 0X70c710)
-    grid = [["."], ["."], ["."]]
+    command = (Direction.UP, 1)
+    grid = np.array([[0], [0], [0]])
     position = (2, 0)
-    assert draw(grid, position, command) == ([["."], ["#"], ["#"]], (1, 0))
+    grid, position = draw(grid, position, command)
+    assert (grid == [[0], [1], [1]]).all()
+    assert position == (1, 0)
 
 
 def test_resize_new_grid_right():
-    grid = [["."]]
+    grid = np.array([[0]])
     grid = resize_right(grid, 5)
-    assert grid == [[".", ".", ".", ".", ".", "."]]
+    assert (grid == np.array([0, 0, 0, 0, 0, 0])).all()
 
 
 def test_resize_existing_grid_right():
-    grid = [
-        ["#", "#", "#"],
-        ["#", ".", "#"],
-        ["#", ".", "#"],
-        ["#", "#", "#"]
-            ]
+    grid = np.array([
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 0, 1],
+        [1, 1, 1]
+            ])
     grid = resize_right(grid, 2)
-    assert grid == [
-        ["#", "#", "#", ".", "."],
-        ["#", ".", "#", ".", "."],
-        ["#", ".", "#", ".", "."],
-        ["#", "#", "#", ".", "."]
-    ]
+    assert (grid == [
+        [1, 1, 1, 0, 0],
+        [1, 0, 1, 0, 0],
+        [1, 0, 1, 0, 0],
+        [1, 1, 1, 0, 0]
+    ]).all()
 
 
 def test_resize_new_grid_down():
-    grid = [["."]]
+    grid = np.array([[0]])
     grid = resize_down(grid, 5)
-    assert grid == [["."], ["."], ["."], ["."], ["."], ["."]]
+    assert (grid == [
+        [0],
+        [0],
+        [0],
+        [0],
+        [0],
+        [0]
+    ]).all()
 
 
 def test_resize_existing_grid_down():
-    grid = [
-        ["#", "#", "#"],
-        ["#", ".", "#"],
-        ["#", ".", "#"],
-        ["#", "#", "#"]
-    ]
+    grid = np.array([
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 0, 1],
+        [1, 1, 1]
+    ])
     grid = resize_down(grid, 2)
-    assert grid == [
-        ["#", "#", "#"],
-        ["#", ".", "#"],
-        ["#", ".", "#"],
-        ["#", "#", "#"],
-        [".", ".", "."],
-        [".", ".", "."]
-    ]
+    assert (grid == np.array([
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 0, 1],
+        [1, 1, 1],
+        [0, 0, 0],
+        [0, 0, 0]
+    ])).all()
 
 
 def test_resize_existing_grid_left():
-    grid = [
-        ["#", "#", "#"],
-        ["#", ".", "#"],
-        ["#", ".", "#"],
-        ["#", "#", "#"]
-    ]
+    grid = np.array([
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 0, 1],
+        [1, 1, 1]
+    ])
     grid = resize_left(grid, 2)
-    assert grid == [
-        [".", ".", "#", "#", "#"],
-        [".", ".", "#", ".", "#"],
-        [".", ".", "#", ".", "#"],
-        [".", ".", "#", "#", "#"]
-    ]
+    assert (grid == [
+        [0, 0, 1, 1, 1],
+        [0, 0, 1, 0, 1],
+        [0, 0, 1, 0, 1],
+        [0, 0, 1, 1, 1]
+    ]).all()
 
 
 def test_resize_existing_grid_up():
-    grid = [
-        ["#", "#", "#"],
-        ["#", ".", "#"],
-        ["#", ".", "#"],
-        ["#", "#", "#"]
-    ]
+    grid = np.array([
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 0, 1],
+        [1, 1, 1]
+    ])
     grid = resize_up(grid, 2)
-    assert grid == [
-        [".", ".", "."],
-        [".", ".", "."],
-        ["#", "#", "#"],
-        ["#", ".", "#"],
-        ["#", ".", "#"],
-        ["#", "#", "#"]
-    ]
+    assert (grid == np.array([
+        [0, 0, 0],
+        [0, 0, 0],
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 0, 1],
+        [1, 1, 1]
+    ])).all()
 
 
 def test_find_inner_point_left_edge():
-    grid = [
-        ["#", "#", "#"],
-        ["#", ".", "#"],
-        ["#", ".", "#"],
-        ["#", "#", "#"]
-    ]
+    grid = np.array([
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 0, 1],
+        [1, 1, 1]
+    ])
     assert find_inner_point(grid) == (1, 1)
 
 
 def test_find_inner_point_middle():
-    grid = [
-        [".", "#", "#", "#", "."],
-        [".", "#", ".", "#", "."],
-        [".", "#", ".", "#", "."],
-        [".", "#", "#", "#", "."]
-    ]
+    grid = np.array([
+        [0, 1, 1, 1, 0],
+        [0, 1, 0, 1, 0],
+        [0, 1, 0, 1, 0],
+        [0, 1, 1, 1, 0]
+    ])
     assert find_inner_point(grid) == (1, 2)
 
 
