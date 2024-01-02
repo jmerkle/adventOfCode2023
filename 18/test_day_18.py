@@ -8,11 +8,11 @@ def test_parse_command():
     assert parse_command("R 6 (#70c710)") == (Direction.RIGHT, 6, 0X70c710)
 
 
-def test_draw_command():
+def test_draw_right():
     command = (Direction.RIGHT, 6, 0X70c710)
     grid = [["."]]
     position = (0, 0)
-    assert draw(grid, position, command) == ([["#", "#", "#", "#", "#", "#"]], (0, 5))
+    assert draw(grid, position, command) == ([["#", "#", "#", "#", "#", "#", "#"]], (0, 6))
 
 
 def test_resize_new_grid_right():

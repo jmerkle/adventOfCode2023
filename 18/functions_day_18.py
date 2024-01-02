@@ -26,7 +26,20 @@ def parse_command(command_string: str) -> Command:
     return Direction(d), int(n), int("0x" + h[2:-1], base=16)
 
 
+def draw_right(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
+    row, column = position
+    resize_by = column + num_steps - len(grid[0]) + 1
+    if resize_by > 0:
+        resize_right(grid, resize_by)
+    grid[row][column:column+num_steps+1] = ["#" for _ in range(num_steps+1)]
+    return grid, (row, column + num_steps)
+
+
 def draw(grid: Grid, position: Position, command: Command) -> tuple[Grid, Position]:
+    direction, num_steps, _ = command
+    match direction:
+        case Direction.RIGHT:
+            return draw_right(grid, position, num_steps)
     return 0
 
 
