@@ -108,6 +108,15 @@ def matrix_to_string(data: list[list[str]]) -> str:
     return "\n".join(["".join(line) for line in data])
 
 
+def find_inner_point(grid: Grid) -> Position:
+    for row in range(len(grid)):
+        if grid[row][0:2] == ["#", "."]:
+            return row, 1
+        for column in range(len(grid[0])-2):
+            if grid[row][column:column+3] == [".", "#", "."]:
+                return row, column + 2
+
+
 def exercise_1(data: list[str]) -> int:
     grid = [["."]]
     position = (0, 0)
@@ -116,4 +125,5 @@ def exercise_1(data: list[str]) -> int:
         grid, position = draw(grid, position, command)
         matrix_as_string = matrix_to_string(grid)
         print(matrix_as_string)
+    inner_point = find_inner_point(grid)
     return 0

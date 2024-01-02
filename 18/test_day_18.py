@@ -116,6 +116,25 @@ def test_resize_existing_grid_up():
     ]
 
 
+def test_find_inner_point_left_edge():
+    grid = [
+        ["#", "#", "#"],
+        ["#", ".", "#"],
+        ["#", ".", "#"],
+        ["#", "#", "#"]
+    ]
+    assert find_inner_point(grid) == (1, 1)
+
+def test_find_inner_point_middle():
+    grid = [
+        [".", "#", "#", "#", "."],
+        [".", "#", ".", "#", "."],
+        [".", "#", ".", "#", "."],
+        [".", "#", "#", "#", "."]
+    ]
+    assert find_inner_point(grid) == (1, 2)
+
+
 def test_exercise_1():
     assert exercise_1(data_small) == 62
 
