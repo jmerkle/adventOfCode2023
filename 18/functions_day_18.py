@@ -38,7 +38,7 @@ def draw_right(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Po
 def draw_left(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
     row, column = position
     resize_by = column - num_steps
-    if resize_by > 0:
+    if resize_by < 0:
         raise Exception("cannot resize left")
     grid[row][column-num_steps:column+1] = ["#" for _ in range(num_steps+1)]
     return grid, (row, column - num_steps)
@@ -56,8 +56,8 @@ def draw_down(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Pos
 
 def draw_up(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
     row, column = position
-    resize_by = column - num_steps
-    if resize_by > 0:
+    resize_by = row - num_steps
+    if resize_by < 0:
         raise Exception("cannot resize up")
     for r in range(row-num_steps, row + 1):
         grid[r][column] = "#"
@@ -90,4 +90,9 @@ def resize_down(grid: Grid, n: int) -> Grid:
 
 
 def exercise_1(data: list[str]) -> int:
+    grid = [["."]]
+    position = (0, 0)
+    for command_string in data:
+        command = parse_command(command_string)
+        grid, position = draw(grid, position, command)
     return 0
