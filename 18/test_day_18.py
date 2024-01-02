@@ -145,7 +145,11 @@ def test_exercise_1_full():
 
 
 def test_convert_hex_to_command():
-    assert hex_to_command("#70c710") == (Direction.RIGHT, 461937)
-    assert hex_to_command("#0dc571") == (Direction.DOWN, 56407)
-    assert hex_to_command("#8ceee2") == (Direction.LEFT, 577262)
-    assert hex_to_command("#caa173") == (Direction.UP, 829975)
+    assert hex_to_command("R 6 (#70c710)") == (Direction.RIGHT, 461937)
+    assert hex_to_command("D 5 (#0dc571)") == (Direction.DOWN, 56407)
+    assert hex_to_command("L 5 (#8ceee2)") == (Direction.LEFT, 577262)
+    assert hex_to_command("U 2 (#caa173)") == (Direction.UP, 829975)
+
+
+def test_exercise_2():
+    assert exercise_2(data_small) == 952408144115

@@ -69,7 +69,7 @@ def draw_up(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Posit
 
 
 def draw(grid: Grid, position: Position, command: Command) -> tuple[Grid, Position]:
-    direction, num_steps, _ = command
+    direction, num_steps = command
     match direction:
         case Direction.RIGHT:
             return draw_right(grid, position, num_steps)
@@ -133,22 +133,34 @@ def fill_shape(grid: Grid, inner_point: Position) -> Grid:
     return grid
 
 
-def exercise_1(data: list[str]) -> int:
+def draw_commands(commands: list[Command]) -> Grid:
     grid = [["."]]
     position = (0, 0)
-    for command_string in data:
-        command = parse_command(command_string)
+    for command in commands:
         grid, position = draw(grid, position, command)
-        grid_as_string = matrix_to_string(grid)
-        print(grid_as_string)
+    return grid
+
+
+def draw_fill_and_calc_size(commands: list[Command]) -> int:
+    grid = draw_commands(commands)
     inner_point = find_inner_point(grid)
     filled_grid = fill_shape(grid, inner_point)
     filled_grid_as_string = matrix_to_string(filled_grid)
     return filled_grid_as_string.count("#")
 
 
-def hex_to_command(hex_string: str) -> Command:
+def exercise_1(data: list[str]) -> int:
+    commands = list(map(parse_command, data))
+    return draw_fill_and_calc_size(commands)
+
+
+def hex_to_command(input_string: str) -> Command:
+    _, hex_string = input_string.split("(")
     distance = int(hex_string[1:6], base=16)
     direction = int(hex_string[6], base=16)
     return list(Direction)[direction], distance
 
+
+def exercise_2(data: list[str]) -> int:
+    commands = list(map(hex_to_command, data))
+    return draw_fill_and_calc_size(commands)
