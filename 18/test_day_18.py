@@ -22,6 +22,20 @@ def test_draw_down():
     assert draw(grid, position, command) == ([["#"], ["#"], ["#"], ["#"], ["#"], ["#"]], (5, 0))
 
 
+def test_draw_left():
+    command = (Direction.LEFT, 2, 0X70c710)
+    grid = [[".", ".", "."]]
+    position = (0, 2)
+    assert draw(grid, position, command) == ([["#", "#", "#"]], (0, 0))
+
+
+def test_draw_up():
+    command = (Direction.UP, 1, 0X70c710)
+    grid = [["."], ["."], ["."]]
+    position = (2, 0)
+    assert draw(grid, position, command) == ([["."], ["#"], ["#"]], (1, 0))
+
+
 def test_resize_new_grid_right():
     grid = [["."]]
     resize_right(grid, 5)

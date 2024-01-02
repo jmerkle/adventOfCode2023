@@ -35,6 +35,15 @@ def draw_right(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Po
     return grid, (row, column + num_steps)
 
 
+def draw_left(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
+    row, column = position
+    resize_by = column - num_steps
+    if resize_by > 0:
+        raise Exception("cannot resize left")
+    grid[row][column-num_steps:column+1] = ["#" for _ in range(num_steps+1)]
+    return grid, (row, column - num_steps)
+
+
 def draw_down(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
     row, column = position
     resize_by = row + num_steps - len(grid) + 1
@@ -45,6 +54,16 @@ def draw_down(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Pos
     return grid, (row + num_steps, column)
 
 
+def draw_up(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
+    row, column = position
+    resize_by = column - num_steps
+    if resize_by > 0:
+        raise Exception("cannot resize up")
+    for r in range(row-num_steps, row + 1):
+        grid[r][column] = "#"
+    return grid, (row - num_steps, column)
+
+
 def draw(grid: Grid, position: Position, command: Command) -> tuple[Grid, Position]:
     direction, num_steps, _ = command
     match direction:
@@ -52,7 +71,10 @@ def draw(grid: Grid, position: Position, command: Command) -> tuple[Grid, Positi
             return draw_right(grid, position, num_steps)
         case Direction.DOWN:
             return draw_down(grid, position, num_steps)
-    return 0
+        case Direction.LEFT:
+            return draw_left(grid, position, num_steps)
+        case Direction.UP:
+            return draw_up(grid, position, num_steps)
 
 
 def resize_right(grid: Grid, n: int) -> Grid:
