@@ -20,7 +20,6 @@ class Direction(Enum):
 
 
 Command: TypeAlias = tuple[Direction, int]
-Grid: TypeAlias = np.ndarray
 Edges: TypeAlias = dict[int, list[int]]
 Edge: TypeAlias = tuple[int, list[int]]
 Position: TypeAlias = tuple[int, int]
@@ -81,68 +80,17 @@ def draw(grid: Edges, position: Position, command: Command) -> tuple[Edges, Posi
             return draw_up(grid, position, num_steps)
 
 
-def resize_right(grid: Grid, n: int) -> Grid:
-    grid = np.c_[grid, np.zeros([grid.shape[0], n])]
-    return grid
-
-
-def resize_left(grid: Grid, n: int) -> Grid:
-    grid = np.c_[np.zeros([grid.shape[0], n]), grid]
-    return grid
-
-
-def resize_down(grid: Grid, n: int) -> Grid:
-    num_columns = grid.shape[1]
-    grid = np.r_[grid, np.zeros([n, num_columns])]
-    return grid
-
-
-def resize_up(grid: Grid, n: int) -> Grid:
-    num_columns = grid.shape[1]
-    grid = np.r_[np.zeros([n, num_columns]), grid]
-    return grid
-
-
-def matrix_to_string(data: Grid) -> str:
-    return np.array2string(data)
-
-
-def find_inner_point(grid: Grid) -> Position:
-    for row in range(grid.shape[0]):
-        if (grid[row, 0:2].tolist() == np.array([1, 0])).all():
-            return row, 1
-        for column in range(grid.shape[1] - 2):
-            if (grid[row, column:column + 3] == [0, 1, 0]).all():
-                return row, column + 2
-
-
-def fill_shape(grid: Grid, inner_point: Position) -> Grid:
-    point_queue = queue.Queue()
-    point_queue.put(inner_point)
-    while point_queue.qsize() > 0:
-        row, column = point_queue.get()
-        if grid[row, column] == 0:
-            grid[row, column] = 1
-            point_queue.put((row - 1, column))
-            point_queue.put((row, column + 1))
-            point_queue.put((row + 1, column))
-            point_queue.put((row, column - 1))
-    return grid
-
-
-def draw_commands(commands: list[Command]) -> Grid:
-    grid = np.array([[0]])
+def draw_commands(commands: list[Command]) -> Edges:
+    edge_dictionary = {}
     position = (0, 0)
     for command in commands:
-        grid, position = draw(grid, position, command)
-    return grid
+        edge_dictionary, position = draw(edge_dictionary, position, command)
+    return edge_dictionary
 
 
 def draw_fill_and_calc_size(commands: list[Command]) -> int:
     grid = draw_commands(commands)
-    inner_point = find_inner_point(grid)
-    filled_grid = fill_shape(grid, inner_point)
-    return np.count_nonzero(filled_grid == 1)
+    return 0
 
 
 def exercise_1(data: list[str]) -> int:
