@@ -8,6 +8,39 @@ def test_parse_command():
     assert parse_command("R 6 (#70c710)") == (Direction.RIGHT, 6)
 
 
+def test_dictionary_horizontal_edge():
+    d = {
+        0: [0],
+        1: [4]
+    }
+    edge = (1, range(0, 4))
+    assert insert_edge(d, edge) == {
+        0: [0],
+        1: [0, 1, 2, 3, 4]
+    }
+
+
+def test_dictionary_horizontal_edge_merge():
+    d = {
+        0: [3]
+    }
+    edge = (0, range(0, 4))
+    assert insert_edge(d, edge) == {
+        0: [0, 1, 2, 3, 3]
+    }
+
+
+def test_dictionary_vertical_edge():
+    d = {
+        1: [0]
+    }
+    edge = (0, range(0, 1))
+    assert insert_edge(d, edge) == {
+        0: [0],
+        1: [0]
+    }
+
+
 def test_draw_right():
     command = (Direction.RIGHT, 6)
     grid = np.array([[0]])

@@ -1,4 +1,5 @@
 from enum import Enum
+from heapq import merge
 from typing import TypeAlias
 import queue
 import numpy as np
@@ -20,12 +21,21 @@ class Direction(Enum):
 
 Command: TypeAlias = tuple[Direction, int]
 Grid: TypeAlias = np.ndarray
+Edges: TypeAlias = dict[int, list[int]]
+Edge: TypeAlias = tuple[int, list[int]]
 Position: TypeAlias = tuple[int, int]
 
 
 def parse_command(command_string: str) -> Command:
     d, n, h = command_string.split()
     return Direction(d), int(n)
+
+
+def insert_edge(edge_dictionary: Edges, edge: Edge) -> Edges:
+    row, columns = edge
+    existing_columns = edge_dictionary.get(row, [])
+    edge_dictionary.update({row: list(merge(existing_columns, columns))})
+    return edge_dictionary
 
 
 def draw_right(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
