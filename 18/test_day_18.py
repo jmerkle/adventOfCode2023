@@ -43,45 +43,51 @@ def test_dictionary_vertical_edge():
 
 def test_draw_right():
     command = (Direction.RIGHT, 6)
-    grid = np.array([[0]])
+    edge_dictionary = {}
     position = (0, 0)
-    grid, position = draw(grid, position, command)
-    assert (grid == [[1, 1, 1, 1, 1, 1, 1]]).all()
+    edge_dictionary, position = draw(edge_dictionary, position, command)
+    assert edge_dictionary == {
+        0: [0, 1, 2, 3, 4, 5]
+    }
     assert position == (0, 6)
 
 
 def test_draw_down():
     command = (Direction.DOWN, 5)
-    grid = np.array([[0]])
+    edge_dictionary = {}
     position = (0, 0)
-    grid, position = draw(grid, position, command)
-    assert (grid == [
-        [1],
-        [1],
-        [1],
-        [1],
-        [1],
-        [1]
-    ]).all()
+    edge_dictionary, position = draw(edge_dictionary, position, command)
+    assert edge_dictionary == {
+        0: [0],
+        1: [0],
+        2: [0],
+        3: [0],
+        4: [0]
+    }
     assert position == (5, 0)
 
 
 def test_draw_left():
     command = (Direction.LEFT, 2)
-    grid = np.array([[0, 0, 0]])
+    edge_dictionary = {}
     position = (0, 2)
-    grid, position = draw(grid, position, command)
-    assert (grid == [[1, 1, 1]]).all()
+    edge_dictionary, position = draw(edge_dictionary, position, command)
+    assert edge_dictionary == {
+        0: [1, 2]
+    }
     assert position == (0, 0)
 
 
 def test_draw_up():
-    command = (Direction.UP, 1)
-    grid = np.array([[0], [0], [0]])
+    command = (Direction.UP, 2)
+    edge_dictionary = {}
     position = (2, 0)
-    grid, position = draw(grid, position, command)
-    assert (grid == [[0], [1], [1]]).all()
-    assert position == (1, 0)
+    edge_dictionary, position = draw(edge_dictionary, position, command)
+    assert edge_dictionary == {
+        1: [0],
+        2: [0]
+    }
+    assert position == (0, 0)
 
 
 def test_resize_new_grid_right():

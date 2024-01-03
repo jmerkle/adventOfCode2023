@@ -38,45 +38,37 @@ def insert_edge(edge_dictionary: Edges, edge: Edge) -> Edges:
     return edge_dictionary
 
 
-def draw_right(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
+def draw_right(edge_dictionary: Edges, position: Position, num_steps: int) -> tuple[Edges, Position]:
     row, column = position
-    resize_by = column + num_steps - grid.shape[1] + 1
-    if resize_by > 0:
-        grid = resize_right(grid, resize_by)
-    grid[row, column:column + num_steps + 1] = np.ones([1, num_steps + 1])
-    return grid, (row, column + num_steps)
+    new_edge = (row, list(range(column, column + num_steps)))
+    edge_dictionary = insert_edge(edge_dictionary, new_edge)
+    return edge_dictionary, (row, column + num_steps)
 
 
-def draw_left(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
+def draw_left(edge_dictionary: Edges, position: Position, num_steps: int) -> tuple[Edges, Position]:
     row, column = position
-    resize_by = num_steps - column
-    if resize_by > 0:
-        grid = resize_left(grid, resize_by)
-        column = column + resize_by
-    grid[row, column - num_steps:column + 1] = np.ones([1, num_steps + 1])
-    return grid, (row, column - num_steps)
+    new_edge = (row, list(reversed(range(column, column - num_steps, -1))))
+    edge_dictionary = insert_edge(edge_dictionary, new_edge)
+    return edge_dictionary, (row, column - num_steps)
 
 
-def draw_down(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
+def draw_down(edge_dictionary: Edges, position: Position, num_steps: int) -> tuple[Edges, Position]:
     row, column = position
-    resize_by = row + num_steps - grid.shape[0] + 1
-    if resize_by > 0:
-        grid = resize_down(grid, resize_by)
-    grid[row:row + num_steps + 1, column] = np.ones([num_steps + 1])
-    return grid, (row + num_steps, column)
+    for r in range(num_steps):
+        new_edge = (row + r, [column])
+        edge_dictionary = insert_edge(edge_dictionary, new_edge)
+    return edge_dictionary, (row + num_steps, column)
 
 
-def draw_up(grid: Grid, position: Position, num_steps: int) -> tuple[Grid, Position]:
+def draw_up(edge_dictionary: Edges, position: Position, num_steps: int) -> tuple[Edges, Position]:
     row, column = position
-    resize_by = num_steps - row
-    if resize_by > 0:
-        grid = resize_up(grid, resize_by)
-        row = row + resize_by
-    grid[row - num_steps:row + 1, column] = np.ones([num_steps + 1])
-    return grid, (row - num_steps, column)
+    for r in range(num_steps):
+        new_edge = (row - r, [column])
+        edge_dictionary = insert_edge(edge_dictionary, new_edge)
+    return edge_dictionary, (row - num_steps, column)
 
 
-def draw(grid: Grid, position: Position, command: Command) -> tuple[Grid, Position]:
+def draw(grid: Edges, position: Position, command: Command) -> tuple[Edges, Position]:
     direction, num_steps = command
     match direction:
         case Direction.RIGHT:
