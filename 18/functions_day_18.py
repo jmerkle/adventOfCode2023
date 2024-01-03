@@ -37,59 +37,58 @@ def insert_edge(edge_dictionary: Edges, edge: Edge) -> Edges:
     return edge_dictionary
 
 
-def draw_right(edge_dictionary: Edges, position: Position, num_steps: int) -> tuple[Edges, Position]:
+def draw_right(horizontal_edges: Edges, vertical_edges: Edges, position: Position, num_steps: int) -> tuple[Edges, Edges, Position]:
     row, column = position
     new_edge = (row, list(range(column, column + num_steps)))
-    edge_dictionary = insert_edge(edge_dictionary, new_edge)
-    return edge_dictionary, (row, column + num_steps)
+    horizontal_edges = insert_edge(horizontal_edges, new_edge)
+    return horizontal_edges, vertical_edges, (row, column + num_steps)
 
 
-def draw_left(edge_dictionary: Edges, position: Position, num_steps: int) -> tuple[Edges, Position]:
+def draw_left(horizontal_edges: Edges, vertical_edges: Edges, position: Position, num_steps: int) -> tuple[Edges, Edges, Position]:
     row, column = position
     new_edge = (row, list(reversed(range(column, column - num_steps, -1))))
-    edge_dictionary = insert_edge(edge_dictionary, new_edge)
-    return edge_dictionary, (row, column - num_steps)
+    horizontal_edges = insert_edge(horizontal_edges, new_edge)
+    return horizontal_edges, vertical_edges, (row, column - num_steps)
 
 
-def draw_down(edge_dictionary: Edges, position: Position, num_steps: int) -> tuple[Edges, Position]:
+def draw_down(horizontal_edges: Edges, vertical_edges: Edges, position: Position, num_steps: int) -> tuple[Edges, Edges, Position]:
     row, column = position
-    for r in range(num_steps):
-        new_edge = (row + r, [column])
-        edge_dictionary = insert_edge(edge_dictionary, new_edge)
-    return edge_dictionary, (row + num_steps, column)
+    new_edge = (column, list(range(row, row + num_steps)))
+    vertical_edges = insert_edge(vertical_edges, new_edge)
+    return horizontal_edges, vertical_edges, (row + num_steps, column)
 
 
-def draw_up(edge_dictionary: Edges, position: Position, num_steps: int) -> tuple[Edges, Position]:
+def draw_up(horizontal_edges: Edges, vertical_edges: Edges, position: Position, num_steps: int) -> tuple[Edges, Edges, Position]:
     row, column = position
-    for r in range(num_steps):
-        new_edge = (row - r, [column])
-        edge_dictionary = insert_edge(edge_dictionary, new_edge)
-    return edge_dictionary, (row - num_steps, column)
+    new_edge = (column, list(reversed(range(row, row - num_steps, -1))))
+    vertical_edges = insert_edge(vertical_edges, new_edge)
+    return horizontal_edges, vertical_edges, (row - num_steps, column)
 
 
-def draw(grid: Edges, position: Position, command: Command) -> tuple[Edges, Position]:
+def draw(horizontal_edges: Edges, vertical_edges: Edges, position: Position, command: Command) -> tuple[Edges, Edges, Position]:
     direction, num_steps = command
     match direction:
         case Direction.RIGHT:
-            return draw_right(grid, position, num_steps)
+            return draw_right(horizontal_edges, vertical_edges, position, num_steps)
         case Direction.DOWN:
-            return draw_down(grid, position, num_steps)
+            return draw_down(horizontal_edges, vertical_edges, position, num_steps)
         case Direction.LEFT:
-            return draw_left(grid, position, num_steps)
+            return draw_left(horizontal_edges, vertical_edges, position, num_steps)
         case Direction.UP:
-            return draw_up(grid, position, num_steps)
+            return draw_up(horizontal_edges, vertical_edges, position, num_steps)
 
 
-def draw_commands(commands: list[Command]) -> Edges:
-    edge_dictionary = {}
+def draw_commands(commands: list[Command]) -> tuple[Edges, Edges]:
+    horizontal_edges = {}
+    vertical_edges = {}
     position = (0, 0)
     for command in commands:
-        edge_dictionary, position = draw(edge_dictionary, position, command)
-    return edge_dictionary
+        horizontal_edges, vertical_edges, position = draw(horizontal_edges, vertical_edges, position, command)
+    return horizontal_edges, vertical_edges
 
 
 def draw_fill_and_calc_size(commands: list[Command]) -> int:
-    grid = draw_commands(commands)
+    horizontal_edges, vertical_edges = draw_commands(commands)
     return 0
 
 
