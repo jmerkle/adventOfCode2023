@@ -82,10 +82,23 @@ def test_draw_up():
     assert position == (0, 0)
 
 
+def test_sorted_list_of_numbers_as_ranges():
+    assert sorted_list_of_numbers_as_ranges([0, 1, 4, 5, 6]) == [(0, 1), (4, 6)]
+    assert sorted_list_of_numbers_as_ranges([0, 1]) == [(0, 1)]
+    assert sorted_list_of_numbers_as_ranges([4]) == [(4, 4)]
+
+
 def test_calculate_boundary():
-    commands = list(map(parse_command, data_small))
-    horizontal_edges, vertical_edges = draw_commands(commands)
+    horizontal_edges = {0: [0, 1, 2, 3, 4, 5, 6], 2: [0, 1, 2], 5: [0, 1, 2, 4, 5, 6], 7: [0, 1, 4, 5, 6], 9: [1, 2, 3, 4, 5, 6]}
+    vertical_edges = {0: [1, 6], 1: [8], 2: [3, 4], 4: [6], 6: [1, 2, 3, 4, 8]}
     assert calculate_boundary_size(horizontal_edges, vertical_edges) == 38
+
+
+def test_calculate_inner():
+    horizontal_edges = {0: [0, 1, 2, 3, 4, 5, 6], 2: [0, 1, 2], 5: [0, 1, 2, 4, 5, 6], 7: [0, 1, 4, 5, 6], 9: [1, 2, 3, 4, 5, 6]}
+    vertical_edges = {0: [1, 6], 1: [8], 2: [3, 4], 4: [6], 6: [1, 2, 3, 4, 8]}
+    vertical_edges_per_row = generate_vertical_edges_per_row(vertical_edges)
+    assert calculate_inner_size(horizontal_edges, vertical_edges, vertical_edges_per_row) == 24
 
 
 def test_exercise_1():

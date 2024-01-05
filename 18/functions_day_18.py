@@ -1,5 +1,6 @@
 from enum import Enum
 from heapq import merge
+from itertools import groupby, count
 from typing import TypeAlias
 import queue
 import numpy as np
@@ -91,10 +92,100 @@ def calculate_boundary_size(horizontal_edges: Edges, vertical_edges: Edges) -> i
     return sum([len(v) for v in horizontal_edges.values()]) + sum([len(v) for v in vertical_edges.values()])
 
 
+def sorted_list_of_numbers_as_ranges(numbers: list[int]) -> list[tuple[int, int]]:
+    if numbers is None:
+        return []
+    return [(li[0], li[-1]) for li in [list(g) for k, g in groupby(numbers, key=lambda i, j=count(): i-next(j))]]
+
+
+def is_boundary_edge(row: int, column_range: tuple[int, int], vertical_edges: Edges) -> bool:
+    if row-1 in vertical_edges.get(column_range[0]) and row-1 in vertical_edges.get(column_range[1]):
+        return True
+    if row+1 in vertical_edges.get(column_range[0]) and row+1 in vertical_edges.get(column_range[1]):
+        return True
+    return False
+
+
+def remove_boundary_edges(row: int, horizontal_edges_in_row: list[tuple[int, int]], vertical_edges_in_row: list[int], vertical_edges: Edges) -> tuple[list[tuple[int, int]], int]:
+    boundary_edge_size = 0
+    while len(horizontal_edges_in_row) > 0 and is_boundary_edge(row, horizontal_edges_in_row[0], vertical_edges):
+        left, right = horizontal_edges_in_row[0]
+        if len(vertical_edges_in_row) > 0 and left > vertical_edges_in_row[0]:
+            return horizontal_edges_in_row, boundary_edge_size
+        boundary_edge_size += right - left + 1
+        horizontal_edges_in_row = horizontal_edges_in_row[1:]
+    return horizontal_edges_in_row, boundary_edge_size
+
+
+def calculate_inner_size_row(row: int, horizontal_edges: Edges, vertical_edges: Edges, vertical_edges_per_row: Edges) -> int:
+    print(f"processing row {row}")
+    horizontal_edges_in_row = sorted_list_of_numbers_as_ranges(horizontal_edges.get(row))
+    # vertical_edges_in_row_tmp = [c for c in sorted(vertical_edges.keys()) if row in vertical_edges.get(c)]
+    vertical_edges_in_row = vertical_edges_per_row.get(row, [])
+    # vertical_edges_in_row = list(set(vertical_edges_per_row.get(row, [])))
+    size = 0
+    horizontal_edges_in_row, _ = remove_boundary_edges(row, horizontal_edges_in_row, vertical_edges_in_row, vertical_edges)
+    while len(horizontal_edges_in_row) > 0 or len(vertical_edges_in_row) > 0:
+        if len(horizontal_edges_in_row) == 0:
+            size = size + vertical_edges_in_row[1] - vertical_edges_in_row[0] - 1
+            vertical_edges_in_row = vertical_edges_in_row[2:]
+        elif len(vertical_edges_in_row) == 0:
+            _, left_boundary = horizontal_edges_in_row[0]
+            horizontal_edges_in_row = horizontal_edges_in_row[1:]
+            horizontal_edges_in_row, boundary_edge_size = remove_boundary_edges(row, horizontal_edges_in_row, vertical_edges_in_row, vertical_edges)
+            right_boundary, _ = horizontal_edges_in_row[0]
+            size += right_boundary - left_boundary - boundary_edge_size - 1
+            horizontal_edges_in_row = horizontal_edges_in_row[1:]
+        else:
+            _, left_boundary_horizontal = horizontal_edges_in_row[0]
+            left_boundary_vertical = vertical_edges_in_row[0]
+            if left_boundary_horizontal < left_boundary_vertical:
+                left_boundary = left_boundary_horizontal
+                horizontal_edges_in_row = horizontal_edges_in_row[1:]
+            else:
+                left_boundary = left_boundary_vertical
+                vertical_edges_in_row = vertical_edges_in_row[1:]
+            horizontal_edges_in_row, boundary_edge_size = remove_boundary_edges(row, horizontal_edges_in_row, vertical_edges_in_row, vertical_edges)
+            if len(horizontal_edges_in_row) == 0:
+                right_boundary = vertical_edges_in_row[0]
+                vertical_edges_in_row = vertical_edges_in_row[1:]
+            elif len(vertical_edges_in_row) == 0:
+                right_boundary, _ = horizontal_edges_in_row[0]
+                horizontal_edges_in_row = horizontal_edges_in_row[1:]
+            else:
+                right_boundary_horizontal, _ = horizontal_edges_in_row[0]
+                right_boundary_vertical = vertical_edges_in_row[0]
+                if right_boundary_horizontal < right_boundary_vertical:
+                    right_boundary = right_boundary_horizontal
+                    horizontal_edges_in_row = horizontal_edges_in_row[1:]
+                else:
+                    right_boundary = right_boundary_vertical
+                    vertical_edges_in_row = vertical_edges_in_row[1:]
+            size += right_boundary - left_boundary - boundary_edge_size - 1
+            horizontal_edges_in_row, _ = remove_boundary_edges(row, horizontal_edges_in_row, vertical_edges_in_row, vertical_edges)
+    return size
+
+
+def calculate_inner_size(horizontal_edges: Edges, vertical_edges: Edges, vertical_edges_per_row: Edges) -> int:
+    return sum([calculate_inner_size_row(r, horizontal_edges, vertical_edges, vertical_edges_per_row) for r in range(min(horizontal_edges.keys()) + 1, max(horizontal_edges.keys()))])
+
+
+def generate_vertical_edges_per_row(vertical_edges: Edges) -> Edges:
+    vertical_edges_per_row = {}
+    for column in sorted(vertical_edges.keys()):
+        print(f"column {column}")
+        edge = vertical_edges.get(column)
+        for row in edge:
+            vertical_edges_per_row = insert_edge(vertical_edges_per_row, (row, [column]))
+    return vertical_edges_per_row
+
+
 def draw_fill_and_calc_size(commands: list[Command]) -> int:
     horizontal_edges, vertical_edges = draw_commands(commands)
+    vertical_edges_per_row = generate_vertical_edges_per_row(vertical_edges)
     boundary_size = calculate_boundary_size(horizontal_edges, vertical_edges)
-    return 0
+    inner_size = calculate_inner_size(horizontal_edges, vertical_edges, vertical_edges_per_row)
+    return boundary_size + inner_size
 
 
 def exercise_1(data: list[str]) -> int:
