@@ -118,7 +118,7 @@ def remove_boundary_edges(row: int, horizontal_edges_in_row: list[tuple[int, int
 
 
 def calculate_inner_size_row(row: int, horizontal_edges: Edges, vertical_edges: Edges, vertical_edges_per_row: Edges) -> int:
-    print(f"processing row {row}")
+    #print(f"processing row {row}")
     horizontal_edges_in_row = sorted_list_of_numbers_as_ranges(horizontal_edges.get(row))
     # vertical_edges_in_row_tmp = [c for c in sorted(vertical_edges.keys()) if row in vertical_edges.get(c)]
     vertical_edges_in_row = vertical_edges_per_row.get(row, [])
@@ -136,6 +136,7 @@ def calculate_inner_size_row(row: int, horizontal_edges: Edges, vertical_edges: 
             right_boundary, _ = horizontal_edges_in_row[0]
             size += right_boundary - left_boundary - boundary_edge_size - 1
             horizontal_edges_in_row = horizontal_edges_in_row[1:]
+            horizontal_edges_in_row, _ = remove_boundary_edges(row, horizontal_edges_in_row, vertical_edges_in_row, vertical_edges)
         else:
             _, left_boundary_horizontal = horizontal_edges_in_row[0]
             left_boundary_vertical = vertical_edges_in_row[0]
