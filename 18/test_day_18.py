@@ -82,6 +82,12 @@ def test_draw_up():
     assert position == (0, 0)
 
 
+def test_calculate_boundary():
+    commands = list(map(parse_command, data_small))
+    horizontal_edges, vertical_edges = draw_commands(commands)
+    assert calculate_boundary_size(horizontal_edges, vertical_edges) == 38
+
+
 def test_exercise_1():
     assert exercise_1(data_small) == 62
 

@@ -87,8 +87,13 @@ def draw_commands(commands: list[Command]) -> tuple[Edges, Edges]:
     return horizontal_edges, vertical_edges
 
 
+def calculate_boundary_size(horizontal_edges: Edges, vertical_edges: Edges) -> int:
+    return sum([len(v) for v in horizontal_edges.values()]) + sum([len(v) for v in vertical_edges.values()])
+
+
 def draw_fill_and_calc_size(commands: list[Command]) -> int:
     horizontal_edges, vertical_edges = draw_commands(commands)
+    boundary_size = calculate_boundary_size(horizontal_edges, vertical_edges)
     return 0
 
 
