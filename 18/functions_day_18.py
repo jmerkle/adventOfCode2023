@@ -39,28 +39,28 @@ def insert_edge(edge_dictionary: Edges, edge: Edge) -> Edges:
 
 def draw_right(horizontal_edges: Edges, vertical_edges: Edges, position: Position, num_steps: int) -> tuple[Edges, Edges, Position]:
     row, column = position
-    new_edge = (row, list(range(column, column + num_steps)))
+    new_edge = (row, list(range(column, column + num_steps + 1)))
     horizontal_edges = insert_edge(horizontal_edges, new_edge)
     return horizontal_edges, vertical_edges, (row, column + num_steps)
 
 
 def draw_left(horizontal_edges: Edges, vertical_edges: Edges, position: Position, num_steps: int) -> tuple[Edges, Edges, Position]:
     row, column = position
-    new_edge = (row, list(reversed(range(column, column - num_steps, -1))))
+    new_edge = (row, list(reversed(range(column, column - num_steps - 1, -1))))
     horizontal_edges = insert_edge(horizontal_edges, new_edge)
     return horizontal_edges, vertical_edges, (row, column - num_steps)
 
 
 def draw_down(horizontal_edges: Edges, vertical_edges: Edges, position: Position, num_steps: int) -> tuple[Edges, Edges, Position]:
     row, column = position
-    new_edge = (column, list(range(row, row + num_steps)))
+    new_edge = (column, list(range(row + 1, row + num_steps)))
     vertical_edges = insert_edge(vertical_edges, new_edge)
     return horizontal_edges, vertical_edges, (row + num_steps, column)
 
 
 def draw_up(horizontal_edges: Edges, vertical_edges: Edges, position: Position, num_steps: int) -> tuple[Edges, Edges, Position]:
     row, column = position
-    new_edge = (column, list(reversed(range(row, row - num_steps, -1))))
+    new_edge = (column, list(reversed(range(row - 1, row - num_steps, -1))))
     vertical_edges = insert_edge(vertical_edges, new_edge)
     return horizontal_edges, vertical_edges, (row - num_steps, column)
 

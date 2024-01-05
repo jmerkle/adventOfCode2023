@@ -37,7 +37,7 @@ def test_draw_right():
     position = (0, 0)
     horizontal_edges, vertical_edges, position = draw(horizontal_edges, vertical_edges, position, command)
     assert horizontal_edges == {
-        0: [0, 1, 2, 3, 4, 5]
+        0: [0, 1, 2, 3, 4, 5, 6]
     }
     assert vertical_edges == {}
     assert position == (0, 6)
@@ -51,7 +51,7 @@ def test_draw_down():
     horizontal_edges, vertical_edges, position = draw(horizontal_edges, vertical_edges, position, command)
     assert horizontal_edges == {}
     assert vertical_edges == {
-        0: [0, 1, 2, 3, 4]
+        0: [1, 2, 3, 4]
     }
     assert position == (5, 0)
 
@@ -63,7 +63,7 @@ def test_draw_left():
     position = (0, 2)
     horizontal_edges, vertical_edges, position = draw(horizontal_edges, vertical_edges, position, command)
     assert horizontal_edges == {
-        0: [1, 2]
+        0: [0, 1, 2]
     }
     assert vertical_edges == {}
     assert position == (0, 0)
@@ -77,7 +77,7 @@ def test_draw_up():
     horizontal_edges, vertical_edges, position = draw(horizontal_edges, vertical_edges, position, command)
     assert horizontal_edges == {}
     assert vertical_edges == {
-        0: [1, 2]
+        0: [1]
     }
     assert position == (0, 0)
 
