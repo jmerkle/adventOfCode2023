@@ -20,8 +20,13 @@ class Categories(IntEnum):
 Part: TypeAlias = tuple[int, int, int, int]
 
 
-def parse_workflows(workflows_as_strings: list[str]) -> dict[str, str]:
-    return dict(map(lambda w: w.split("{"), workflows_as_strings))
+def parse_single_workflow(workflow_as_string: str) -> tuple[str, list[str]]:
+    name, instructions = workflow_as_string.removesuffix("}").split("{")
+    return name, instructions.split(",")
+
+
+def parse_workflows(workflows_as_strings: list[str]) -> dict[str, list[str]]:
+    return dict(map(parse_single_workflow, workflows_as_strings))
 
 
 def exercise_1(data: list[list[str]]) -> int:
