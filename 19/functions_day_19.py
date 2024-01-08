@@ -51,5 +51,14 @@ def apply_workflow_to_part(workflow: list[str], part: Part) -> str:
         return apply_workflow_to_part(remaining_rules, part)
 
 
+def apply_all_workflows_to_part(workflows: dict[str, list[str]], part: Part) -> bool:
+    current_workflow = []
+    result = "in"
+    while result not in ["A", "R"]:
+        current_workflow = workflows.get(result)
+        result = apply_workflow_to_part(current_workflow, part)
+    return result == "A"
+
+
 def exercise_1(data: list[list[str]]) -> int:
     return 0
