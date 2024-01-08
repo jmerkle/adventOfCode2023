@@ -32,5 +32,12 @@ def test_parse_workflows_as_dict():
         "hdj": ["m>838:A", "pv"],
     }
 
+
+def test_apply_workflow_to_part():
+    workflow = (["s<1351:px", "qqz"])
+    assert apply_workflow_to_part(workflow, (787, 2655, 1222, 2876)) == "qqz"
+    assert apply_workflow_to_part(workflow, (1679, 44, 2067, 496)) == "px"
+
+
 def test_exercise_1():
     assert exercise_1(data_small) == 19114
