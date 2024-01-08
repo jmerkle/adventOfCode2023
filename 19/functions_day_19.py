@@ -1,3 +1,4 @@
+import re
 from enum import Enum
 from typing import TypeAlias
 
@@ -29,6 +30,11 @@ def parse_single_workflow(workflow_as_string: str) -> Workflow:
 
 def parse_workflows(workflows_as_strings: list[str]) -> dict[str, list[str]]:
     return dict(map(parse_single_workflow, workflows_as_strings))
+
+
+def parse_part(part_as_string: str) -> Part:
+    values = re.search("{x=(\d+),m=(\d+),a=(\d+),s=(\d+)}", part_as_string)
+    return int(values.group(1)), int(values.group(2)), int(values.group(3)), int(values.group(4))
 
 
 def apply_predicate_to_part(predicate: str, part: Part) -> bool:

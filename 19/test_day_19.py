@@ -33,6 +33,17 @@ def test_parse_workflows_as_dict():
     }
 
 
+def test_parse_parts():
+    _, parts = data_small
+    assert list(map(parse_part, parts)) == [
+        (787, 2655, 1222, 2876),
+        (1679, 44, 2067, 496),
+        (2036, 264, 79, 2244),
+        (2461, 1339, 466, 291),
+        (2127, 1623, 2188, 1013),
+    ]
+
+
 def test_apply_workflow_to_part():
     workflow = (["s<1351:px", "qqz"])
     assert apply_workflow_to_part(workflow, (787, 2655, 1222, 2876)) == "qqz"
