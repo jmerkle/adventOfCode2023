@@ -78,3 +78,43 @@ def test_exercise_1():
 
 def test_exercise_1_full():
     assert exercise_1(data_full) == 391132
+
+
+def test_calculate_distinct_combinations():
+    workflows = {
+        "px": ["a<2006:qkq", "m>2090:A", "rfg"],
+        "pv": ["a>1716:R", "A"],
+        "lnx": ["m>1548:A", "A"],
+        "rfg": ["s<537:gd", "x>2440:R", "A"],
+        "qs": ["s>3448:A", "lnx"],
+        "qkq": ["x<1416:A", "crn"],
+        "crn": ["x>2662:A", "R"],
+        "in": ["s<1351:px", "qqz"],
+        "qqz": ["s>2770:qs", "m<1801:hdj", "R"],
+        "gd": ["a>3333:R", "R"],
+        "hdj": ["m>838:A", "pv"],
+        "test": ["A"]
+    }
+    assert calculate_distinct_combinations(workflows, ["A"], ((1, 2), (1, 1000), (1, 1000), (5, 10))) == 2*1000*1000*6
+    assert calculate_distinct_combinations(workflows, ["R"], ((1, 2), (1, 1000), (1, 1000), (5, 10))) == 0
+    assert calculate_distinct_combinations(workflows, ["test"], ((1, 2), (1, 1000), (1, 1000), (5, 10))) == 2*1000*1000*6
+    assert calculate_distinct_combinations(workflows, ["test"], ((1, 2), (1, 1000), (-1, -1), (5, 10))) == 0
+
+
+def test_split_ranges_on_predicate():
+    assert (split_ranges_on_predicate("a<2006", ((1, 2), (1, 1000), (2000, 2010), (5, 10))) ==
+            ((1, 2), (1, 1000), (2000, 2005), (5, 10)), ((1, 2), (1, 1000), (2006, 2010), (5, 10)))
+    assert (split_ranges_on_predicate("a>2006", ((1, 2), (1, 1000), (2000, 2010), (5, 10))) ==
+            ((1, 2), (1, 1000), (2007, 2010), (5, 10)), ((1, 2), (1, 1000), (2000, 2006), (5, 10)))
+    assert (split_ranges_on_predicate("a>2006", ((1, 2), (1, 1000), (2000, 2001), (5, 10))) ==
+            ((1, 2), (1, 1000), (-1, -1), (5, 10)), ((1, 2), (1, 1000), (2000, 2001), (5, 10)))
+    assert (split_ranges_on_predicate("a>2006", ((1, 2), (1, 1000), (2007, 2010), (5, 10))) ==
+            ((1, 2), (1, 1000), (2007, 2010), (5, 10)), ((1, 2), (1, 1000), (-1, -1), (5, 10)))
+
+
+def test_exercise_2():
+    assert exercise_2(data_small) == 167409079868000
+
+
+def test_exercise_2_full():
+    assert exercise_2(data_full) == 128163929109524
