@@ -44,6 +44,10 @@ def test_parse_parts():
     ]
 
 
+def test_rate_part():
+    assert rate_part((787, 2655, 1222, 2876)) == 7540
+
+
 def test_apply_workflow_to_part():
     workflow = (["s<1351:px", "qqz"])
     assert apply_workflow_to_part(workflow, (787, 2655, 1222, 2876)) == "qqz"

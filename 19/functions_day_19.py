@@ -37,6 +37,10 @@ def parse_part(part_as_string: str) -> Part:
     return int(values.group(1)), int(values.group(2)), int(values.group(3)), int(values.group(4))
 
 
+def rate_part(part: Part) -> int:
+    return sum(part)
+
+
 def apply_predicate_to_part(predicate: str, part: Part) -> bool:
     category, comparator, *_ = list(predicate)
     value_int = int(predicate[2:])
@@ -67,4 +71,7 @@ def apply_all_workflows_to_part(workflows: dict[str, list[str]], part: Part) -> 
 
 
 def exercise_1(data: list[list[str]]) -> int:
-    return 0
+    workflows = parse_workflows(data[0])
+    parts = map(parse_part, data[1])
+    accepted_parts = filter(lambda p: apply_all_workflows_to_part(workflows, p), parts)
+    return sum(map(rate_part, accepted_parts))
