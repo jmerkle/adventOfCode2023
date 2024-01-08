@@ -74,3 +74,7 @@ def test_apply_all_workflows_to_part():
 
 def test_exercise_1():
     assert exercise_1(data_small) == 19114
+
+
+def test_exercise_1_full():
+    assert exercise_1(data_full) == 391132
