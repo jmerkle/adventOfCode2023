@@ -30,6 +30,10 @@ class Module(ABC):
         pass
 
 
+def generate_pulses(source: str, destinations: list[str], pulse_type: bool):
+    return list(map(lambda d: Pulse(source, d, pulse_type), destinations))
+
+
 class FlipFlop:
     def __init__(self, connected_modules: list[str]):
         self.connected_modules = connected_modules
@@ -39,16 +43,18 @@ class FlipFlop:
         if pulse.pulse_type:
             return []
         self.on = not self.on
-        return list(map(lambda c: Pulse(pulse.destination, c, self.on), self.connected_modules))
+        return generate_pulses(pulse.destination, self.connected_modules, self.on)
 
 
 class Conjunction:
     def __init__(self, input_modules: list[str], connected_modules: list[str]):
-        self.input_modules = input_modules
+        self.input_modules: dict[str, bool] = dict.fromkeys(input_modules, False)
         self.connected_modules = connected_modules
 
     def receive_pulse(self, pulse: Pulse) -> list[Pulse]:
-        return []
+        self.input_modules.update({pulse.source: pulse.pulse_type})
+        outgoing_pulse_type = all(self.input_modules.values())
+        return generate_pulses(pulse.destination, self.connected_modules, outgoing_pulse_type)
 
 
 def exercise_1(data: list[str]) -> int:
