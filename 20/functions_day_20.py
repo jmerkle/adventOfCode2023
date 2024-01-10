@@ -9,13 +9,8 @@ def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
     return [x for x in data.split("\n") if len(x) > 0]
 
 
-class PulseType(Enum):
-    HIGH = "H"
-    LOW = "L"
-
-
 class Pulse:
-    def __init__(self, source: str, destination: str, pulse_type: PulseType):
+    def __init__(self, source: str, destination: str, pulse_type: bool):
         self.source = source
         self.destination = destination
         self.pulse_type = pulse_type
@@ -41,11 +36,10 @@ class FlipFlop:
         self.on = False
 
     def receive_pulse(self, pulse: Pulse) -> list[Pulse]:
-        if pulse.pulse_type == PulseType.HIGH:
+        if pulse.pulse_type:
             return []
         self.on = not self.on
-        outgoing_pulse_type = PulseType.HIGH if self.on else PulseType.LOW
-        return list(map(lambda c: Pulse(pulse.destination, c, outgoing_pulse_type), self.connected_modules))
+        return list(map(lambda c: Pulse(pulse.destination, c, self.on), self.connected_modules))
 
 
 class Conjunction:
