@@ -15,10 +15,18 @@ class PulseType(Enum):
 
 
 class Pulse:
-    def __init__(self, source: str, destination: str, type: PulseType):
+    def __init__(self, source: str, destination: str, pulse_type: PulseType):
         self.source = source
         self.destination = destination
-        self.type = PulseType
+        self.pulse_type = pulse_type
+
+    def __eq__(self, other):
+        if not isinstance(other, Pulse):
+            return NotImplemented
+
+        return (self.source == other.source
+                and self.destination == other.destination
+                and self.pulse_type == other.pulse_type)
 
 
 class Module(ABC):
@@ -33,7 +41,11 @@ class FlipFlop:
         self.on = False
 
     def receive_pulse(self, pulse: Pulse) -> list[Pulse]:
-        return []
+        if pulse.pulse_type == PulseType.HIGH:
+            return []
+        self.on = not self.on
+        outgoing_pulse_type = PulseType.HIGH if self.on else PulseType.LOW
+        return list(map(lambda c: Pulse(pulse.destination, c, outgoing_pulse_type), self.connected_modules))
 
 
 class Conjunction:
