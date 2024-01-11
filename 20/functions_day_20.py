@@ -82,5 +82,9 @@ def construct_modules_from_input(data: list[str]) -> tuple[dict[str, Module], li
     return modules, broadcaster
 
 
+def send_pulse(modules: dict[str, Module], pulse: Pulse) -> list[Pulse]:
+    return modules.get(pulse.destination).receive_pulse(pulse)
+
+
 def exercise_1(data: list[str]) -> int:
     return 0

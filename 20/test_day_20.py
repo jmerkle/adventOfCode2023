@@ -62,5 +62,41 @@ def test_construct_modules_from_input():
     assert inv.__getattribute__("input_modules") == {"c": False}
 
 
+def test_send_single_pulse():
+    data = [
+        "broadcaster -> a, b, c",
+        "%a -> b",
+        "%b -> c",
+        "%c -> inv",
+        "&inv -> a"
+    ]
+    modules, _ = construct_modules_from_input(data)
+    # broadcast
+    assert (send_pulse(modules, Pulse("broadcaster", "a", False))
+            == [Pulse("a", "b", True)])
+    assert (send_pulse(modules, Pulse("broadcaster", "b", False))
+            == [Pulse("b", "c", True)])
+    assert (send_pulse(modules, Pulse("broadcaster", "c", False))
+            == [Pulse("c", "inv", True)])
+    # generated pulses
+    assert (send_pulse(modules, Pulse("a", "b", True))
+            == [])
+    assert (send_pulse(modules, Pulse("b", "c", True))
+            == [])
+    assert (send_pulse(modules, Pulse("c", "inv", True))
+            == [Pulse("inv", "a", False)])
+    assert (send_pulse(modules, Pulse("inv", "a", False))
+            == [Pulse("a", "b", False)])
+    assert (send_pulse(modules, Pulse("a", "b", False))
+            == [Pulse("b", "c", False)])
+    assert (send_pulse(modules, Pulse("b", "c", False))
+            == [Pulse("c", "inv", False)])
+    assert (send_pulse(modules, Pulse("c", "inv", False))
+            == [Pulse("inv", "a", True)])
+    assert (send_pulse(modules, Pulse("inv", "a", True))
+            == [])
+
+
+
 def test_exercise_1():
     assert exercise_1(data_small) == 32000000
