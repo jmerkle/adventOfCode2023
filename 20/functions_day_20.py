@@ -84,7 +84,10 @@ def construct_modules_from_input(data: list[str]) -> tuple[dict[str, Module], li
 
 
 def send_pulse(modules: dict[str, Module], pulse: Pulse) -> list[Pulse]:
-    return modules.get(pulse.destination).receive_pulse(pulse)
+    module = modules.get(pulse.destination)
+    if module is None:
+        return []
+    return module.receive_pulse(pulse)
 
 
 def push_button_and_count(modules: dict[str, Module], broadcaster: list[str]) -> tuple[int, int]:
