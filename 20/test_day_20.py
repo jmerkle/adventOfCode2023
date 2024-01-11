@@ -1,6 +1,7 @@
 from functions_day_20 import *
 
-data_small = read_file_as_list_of_lines_and_filter_empty_lines('input_small.txt')
+data_small_1 = read_file_as_list_of_lines_and_filter_empty_lines('input_small_1.txt')
+data_small_2 = read_file_as_list_of_lines_and_filter_empty_lines('input_small_2.txt')
 data_full = read_file_as_list_of_lines_and_filter_empty_lines('input.txt')
 
 
@@ -112,4 +113,5 @@ def test_push_button_and_count():
 
 
 def test_exercise_1():
-    assert exercise_1(data_small) == 32000000
+    assert exercise_1(data_small_1) == 32000000
+    assert exercise_1(data_small_2) == 11687500

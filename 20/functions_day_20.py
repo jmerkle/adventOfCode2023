@@ -104,4 +104,10 @@ def push_button_and_count(modules: dict[str, Module], broadcaster: list[str]) ->
 
 
 def exercise_1(data: list[str]) -> int:
-    return 0
+    modules, broadcaster = construct_modules_from_input(data)
+    low_count, high_count = 0, 0
+    for _ in range(0, 1000):
+        l, h = push_button_and_count(modules, broadcaster)
+        low_count += l
+        high_count += h
+    return low_count*high_count
