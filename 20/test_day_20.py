@@ -34,5 +34,33 @@ def test_conjunction():
     assert output_5 == [Pulse("m", "out", False)]
 
 
+def test_construct_modules_from_input():
+    data = [
+        "broadcaster -> a, b, c",
+        "%a -> b",
+        "%b -> c",
+        "%c -> inv",
+        "&inv -> a"
+    ]
+    modules, broadcaster = construct_modules_from_input(data)
+    assert broadcaster == ["a", "b", "c"]
+    a = modules.get("a")
+    assert isinstance(a, FlipFlop)
+    assert a.__getattribute__("connected_modules") == ["b"]
+
+    b = modules.get("b")
+    assert isinstance(b, FlipFlop)
+    assert b.__getattribute__("connected_modules") == ["c"]
+
+    c = modules.get("c")
+    assert isinstance(c, FlipFlop)
+    assert c.__getattribute__("connected_modules") == ["inv"]
+
+    inv = modules.get("inv")
+    assert isinstance(inv, Conjunction)
+    assert inv.__getattribute__("connected_modules") == ["a"]
+    assert inv.__getattribute__("input_modules") == {"c": False}
+
+
 def test_exercise_1():
     assert exercise_1(data_small) == 32000000

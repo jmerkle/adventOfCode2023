@@ -57,5 +57,30 @@ class Conjunction:
         return generate_pulses(pulse.destination, self.connected_modules, outgoing_pulse_type)
 
 
+def parse_module(module_string: str) -> (str, str, list[str]):
+    type_and_name, connected_modules = module_string.split("->")
+    connected_modules = list(map(lambda c: c.strip(), connected_modules.split(",")))
+    if type_and_name.strip() == "broadcaster":
+        return "broadcaster", "broadcaster", connected_modules
+    module_type = "flipflop" if type_and_name[0] == "%" else "conjunction"
+    name = type_and_name.strip()[1:]
+    return module_type, name, connected_modules
+
+
+def construct_modules_from_input(data: list[str]) -> tuple[dict[str, Module], list[str]]:
+    parsed_modules = list(map(parse_module, data))
+    modules = {}
+    broadcaster = []
+    for module_type, name, connected_modules in parsed_modules:
+        if module_type == "flipflop":
+            modules.update({name: FlipFlop(connected_modules)})
+        if module_type == "conjunction":
+            input_modules = list(map(lambda m: m[1], filter(lambda m: name in m[2], parsed_modules)))
+            modules.update({name: Conjunction(input_modules, connected_modules)})
+        if module_type == "broadcaster":
+            broadcaster = connected_modules
+    return modules, broadcaster
+
+
 def exercise_1(data: list[str]) -> int:
     return 0
