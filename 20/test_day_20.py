@@ -115,3 +115,7 @@ def test_push_button_and_count():
 def test_exercise_1():
     assert exercise_1(data_small_1) == 32000000
     assert exercise_1(data_small_2) == 11687500
+
+
+def test_exercise_1_full():
+    assert exercise_1(data_full) == 886701120
