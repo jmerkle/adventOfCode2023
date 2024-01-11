@@ -27,11 +27,11 @@ def test_conjunction():
     output_4 = module.receive_pulse(Pulse("in1", "m", True))
     output_5 = module.receive_pulse(Pulse("in1", "m", False))
 
-    assert output_1 == [Pulse("m", "out", False)]
-    assert output_2 == [Pulse("m", "out", False)]
-    assert output_3 == [Pulse("m", "out", True)]
-    assert output_4 == [Pulse("m", "out", True)]
-    assert output_5 == [Pulse("m", "out", False)]
+    assert output_1 == [Pulse("m", "out", True)]
+    assert output_2 == [Pulse("m", "out", True)]
+    assert output_3 == [Pulse("m", "out", False)]
+    assert output_4 == [Pulse("m", "out", False)]
+    assert output_5 == [Pulse("m", "out", True)]
 
 
 def test_construct_modules_from_input():

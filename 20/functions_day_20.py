@@ -53,7 +53,7 @@ class Conjunction:
 
     def receive_pulse(self, pulse: Pulse) -> list[Pulse]:
         self.input_modules.update({pulse.source: pulse.pulse_type})
-        outgoing_pulse_type = all(self.input_modules.values())
+        outgoing_pulse_type = not all(self.input_modules.values())
         return generate_pulses(pulse.destination, self.connected_modules, outgoing_pulse_type)
 
 
