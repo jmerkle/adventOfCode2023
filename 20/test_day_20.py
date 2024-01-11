@@ -122,4 +122,4 @@ def test_exercise_1_full():
 
 
 def test_exercise_2():
-    assert exercise_2(data_full) == 0
+    assert exercise_2(data_full) == 228134431501037

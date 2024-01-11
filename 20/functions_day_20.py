@@ -1,6 +1,5 @@
 import queue
 from abc import ABC, abstractmethod
-from enum import Enum
 
 
 def read_file_as_list_of_lines_and_filter_empty_lines(filename: str):
@@ -90,7 +89,7 @@ def send_pulse(modules: dict[str, Module], pulse: Pulse) -> list[Pulse]:
     return module.receive_pulse(pulse)
 
 
-def push_button_and_count(modules: dict[str, Module], broadcaster: list[str]) -> tuple[int, int, bool]:
+def push_button_and_count(modules: dict[str, Module], broadcaster: list[str], counter = 0) -> tuple[int, int, bool]:
     pulse_queue = queue.Queue()
     has_rx_been_pinged = False
     broadcast_pulses = map(lambda b: Pulse("broadcaster", b, False), broadcaster)
@@ -105,6 +104,9 @@ def push_button_and_count(modules: dict[str, Module], broadcaster: list[str]) ->
         has_rx_been_pinged = has_rx_been_pinged or (pulse.destination == "rx" and not pulse.pulse_type)
         new_pulses = send_pulse(modules, pulse)
         [pulse_queue.put(p) for p in new_pulses]
+        if pulse.destination == "zh" and pulse.pulse_type:
+            zh_state = modules.get("zh").__getattribute__("input_modules")
+            print(f"state of zh is {zh_state} at button push {counter + 1}")
     return low_count, high_count, has_rx_been_pinged
 
 
@@ -121,6 +123,6 @@ def exercise_1(data: list[str]) -> int:
 def exercise_2(data: list[str]) -> int:
     modules, broadcaster = construct_modules_from_input(data)
     push_count = 0
-    while not push_button_and_count(modules, broadcaster)[2]:
+    while not push_button_and_count(modules, broadcaster, push_count)[2]:
         push_count += 1
     return push_count + 1
