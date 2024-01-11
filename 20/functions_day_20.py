@@ -90,8 +90,9 @@ def send_pulse(modules: dict[str, Module], pulse: Pulse) -> list[Pulse]:
     return module.receive_pulse(pulse)
 
 
-def push_button_and_count(modules: dict[str, Module], broadcaster: list[str]) -> tuple[int, int]:
+def push_button_and_count(modules: dict[str, Module], broadcaster: list[str]) -> tuple[int, int, bool]:
     pulse_queue = queue.Queue()
+    has_rx_been_pinged = False
     broadcast_pulses = map(lambda b: Pulse("broadcaster", b, False), broadcaster)
     [pulse_queue.put(p) for p in broadcast_pulses]
     low_count, high_count = 1, 0  # initialise low with 1 because button push counts as a low pulse
@@ -101,16 +102,25 @@ def push_button_and_count(modules: dict[str, Module], broadcaster: list[str]) ->
             high_count += 1
         else:
             low_count += 1
+        has_rx_been_pinged = has_rx_been_pinged or (pulse.destination == "rx" and not pulse.pulse_type)
         new_pulses = send_pulse(modules, pulse)
         [pulse_queue.put(p) for p in new_pulses]
-    return low_count, high_count
+    return low_count, high_count, has_rx_been_pinged
 
 
 def exercise_1(data: list[str]) -> int:
     modules, broadcaster = construct_modules_from_input(data)
     low_count, high_count = 0, 0
     for _ in range(0, 1000):
-        l, h = push_button_and_count(modules, broadcaster)
+        l, h, _ = push_button_and_count(modules, broadcaster)
         low_count += l
         high_count += h
     return low_count*high_count
+
+
+def exercise_2(data: list[str]) -> int:
+    modules, broadcaster = construct_modules_from_input(data)
+    push_count = 0
+    while not push_button_and_count(modules, broadcaster)[2]:
+        push_count += 1
+    return push_count + 1

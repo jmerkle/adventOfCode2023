@@ -107,7 +107,7 @@ def test_push_button_and_count():
         "&inv -> a"
     ]
     modules, broadcaster = construct_modules_from_input(data)
-    low, high = push_button_and_count(modules, broadcaster)
+    low, high, _ = push_button_and_count(modules, broadcaster)
     assert low == 8
     assert high == 4
 
@@ -119,3 +119,7 @@ def test_exercise_1():
 
 def test_exercise_1_full():
     assert exercise_1(data_full) == 886701120
+
+
+def test_exercise_2():
+    assert exercise_2(data_full) == 0
