@@ -97,6 +97,19 @@ def test_send_single_pulse():
             == [])
 
 
+def test_push_button_and_count():
+    data = [
+        "broadcaster -> a, b, c",
+        "%a -> b",
+        "%b -> c",
+        "%c -> inv",
+        "&inv -> a"
+    ]
+    modules, broadcaster = construct_modules_from_input(data)
+    low, high = push_button_and_count(modules, broadcaster)
+    assert low == 8
+    assert high == 4
+
 
 def test_exercise_1():
     assert exercise_1(data_small) == 32000000

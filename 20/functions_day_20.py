@@ -1,3 +1,4 @@
+import queue
 from abc import ABC, abstractmethod
 from enum import Enum
 
@@ -84,6 +85,22 @@ def construct_modules_from_input(data: list[str]) -> tuple[dict[str, Module], li
 
 def send_pulse(modules: dict[str, Module], pulse: Pulse) -> list[Pulse]:
     return modules.get(pulse.destination).receive_pulse(pulse)
+
+
+def push_button_and_count(modules: dict[str, Module], broadcaster: list[str]) -> tuple[int, int]:
+    pulse_queue = queue.Queue()
+    broadcast_pulses = map(lambda b: Pulse("broadcaster", b, False), broadcaster)
+    [pulse_queue.put(p) for p in broadcast_pulses]
+    low_count, high_count = 1, 0  # initialise low with 1 because button push counts as a low pulse
+    while pulse_queue.qsize() > 0:
+        pulse = pulse_queue.get_nowait()
+        if pulse.pulse_type:
+            high_count += 1
+        else:
+            low_count += 1
+        new_pulses = send_pulse(modules, pulse)
+        [pulse_queue.put(p) for p in new_pulses]
+    return low_count, high_count
 
 
 def exercise_1(data: list[str]) -> int:
